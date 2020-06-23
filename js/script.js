@@ -10,6 +10,6 @@ function myFunction() {
     }
 }
 
-// document.getElementById("clickme").addEventListener("click", () => {
-//     myFunction();
-// })
+document.getElementById("clickme").addEventListener("click", () => {
+    myFunction();
+})
