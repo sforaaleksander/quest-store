@@ -1,13 +1,18 @@
 /* Style the navigation menu */
+body {
+    margin: 0;
+}
+
 .topnav {
-    width: 20%;
+    width: 100%;
     overflow: hidden;
-    background-color: #333;
     position: relative;
 }
 
 /* Hide the links inside the navigation menu (except for logo/home) */
 .topnav #myLinks {
+    background-color: #333;
+    width: 300px;
     display: none;
 }
 
