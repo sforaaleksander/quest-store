@@ -1,0 +1,60 @@
+
+div.content {
+    background-color: #414141;
+    border: solid;
+    border-color: black;
+    border: round: 0.2em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0.5em 20%;
+    margin-top: 1em;
+}
+
+div.content form {
+    width: 90%;
+    font: normal normal 20px/1 aerial;
+    display: flex;
+    flex-direction: column;
+
+}
+
+div.content form section {
+    display: flex;
+    margin: 0.5em 0.5em;
+    padding: 0.5em 0.5em;
+    color: white;
+}
+
+div.content h1.newMember {
+    align-self: flex-start;
+    font-size: 3em;
+    color: white;
+    margin-left: 20%;
+}
+
+div.content form section label {
+    margin: 1em 1em;
+    margin-left: 0em;
+}
+
+div.content form section input {
+    background-color: #232323;
+    color: white;
+    width: 100%;
+    font-size: 1.5em;
+    padding: 0em 1em;
+    border-radius: 0.7em;
+}
+
+div.content form section button {
+    background-color: black;
+    color: white;
+    padding: 1em 5em;
+    margin: 0.5em 2em;
+    border-radius: 1em;
+}
+
+
+
+
