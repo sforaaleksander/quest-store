@@ -7,17 +7,16 @@
 <body>
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/signInRegister.css">
- 
-<div class="content">
-    <div class="logIn">
-    <form>
-        <input type="text" id="email" placeholder="Enter your email.."><br>
-        <input type="text" id="password" placeholder="Enter your password.."><br>
-        <button type="submit">Sign in</button><br>
-        <button type="submit">Sign up</button>
-    </form>
-    </div>
+<div class="alert" id="alert" hidden>
+    Incorrect email or password, please try again.
 </div>
-<!-- <script src="js/script.js"></script> -->
+<div class="content">
+    <input type="text" id="email" placeholder="Enter your email.."><br>
+    <input type="password" id="password" placeholder="Enter your password.."><br>
+    <button type="submit" id="signin">Sign in</button><br>
+    <button type="submit" id="signup">Sign up</button>
+</div>
+
+<script src="js/signInRegistration.js"></script>
 </body>
 </html>
