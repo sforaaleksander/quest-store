@@ -1,4 +1,11 @@
 
+header {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+}
+
 div.content {
     background-color: #414141;
     border: solid;
@@ -7,7 +14,7 @@ div.content {
     display: flex;
     align-items: center;
     flex-direction: column;
-    margin: 1em 10% 0.5em;
+    margin: 10em 10% 0.5em;
 }
 
 div.content section {
