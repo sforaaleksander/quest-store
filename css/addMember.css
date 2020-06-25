@@ -1,14 +1,15 @@
 
 div.content {
+    position: fixed;
+    top: 50px;
     background-color: #414141;
     border: solid;
     border-color: black;
-    border: round: 0.2em;
+    border: 0.2em;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 0.5em 20%;
-    margin-top: 1em;
+    margin: 1em 20% 0.5em;
 }
 
 div.content form {
@@ -23,7 +24,7 @@ div.content form section {
     display: flex;
     margin: 0.5em 0.5em;
     padding: 0.5em 0.5em;
-    color: white;
+    color: #ffffff;
 }
 
 div.content h1.newMember {
@@ -34,8 +35,7 @@ div.content h1.newMember {
 }
 
 div.content form section label {
-    margin: 1em 1em;
-    margin-left: 0em;
+    margin: 1em 1em 1em 0;
 }
 
 div.content form section input {
@@ -43,7 +43,7 @@ div.content form section input {
     color: white;
     width: 100%;
     font-size: 1.5em;
-    padding: 0em 1em;
+    padding: 0 1em;
     border-radius: 0.7em;
 }
 
