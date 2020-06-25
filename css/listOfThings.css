@@ -18,6 +18,15 @@ div.content section {
     font: normal normal 20px/1 aerial;
 }
 
+header h1.header {
+    color: #ddd;
+    background-color: black;
+    font-size: 4em;
+    text-align: center;
+    margin: 0 0 0;
+    padding: 15px;
+    letter-spacing: 0.25em;
+}
 
 div.content h1.wallet {
     align-self: flex-start;
@@ -67,4 +76,18 @@ div section.top button.top {
     padding: 1em 5em;
     margin: 0.5em 2em;
     border-radius: 1em;
+}
+
+footer {
+    background-color: rgba(87, 85, 85, 0.952);
+    color: white;
+    text-align: center;
+    padding: 10px 12px;
+    text-decoration: none;
+    font-size: 20px;
+    overflow: hidden;
+    position: fixed;
+    bottom: 0;
+    margin-top:auto;
+    width: 100%;
 }
