@@ -30,13 +30,13 @@ div.content input {
 }
 
 div.content::placeholder {
-    font-size:0.75em;
+    font-size: 0.75em;
     text-align: center;
 }
 
 div.alert {
     padding: 10px;
-    background-color: #f54438; 
+    background-color: #f54438;
     color: black;
     margin-top: 0px;
     width: auto;

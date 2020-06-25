@@ -1,0 +1,70 @@
+
+div.content {
+    background-color: #414141;
+    border: solid;
+    border-color: black;
+    border: 0.2em;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 1em 10% 0.5em;
+}
+
+div.content section {
+    color: white;
+    align-items: center;
+    width: 95%;
+    margin: 0.5em 0.5em;
+    font: normal normal 20px/1 aerial;
+}
+
+
+div.content h1.wallet {
+    align-self: flex-start;
+    font-size: 3em;
+    margin: 0.5em 0.5em 0.5em 10%;
+}
+
+div.content section table {
+    width: 100%;
+}
+
+div.content section table thead tr th, div.content section table tbody tr td {
+    padding-right: 0.5em;
+}
+
+div.content section table thead tr th, div.content section table tbody tr td:first-child {
+    text-align: left
+}
+
+div.content section table thead tr th:nth-child(1n+2) {
+    width: 1%;
+}
+
+div.content section table tbody tr td:nth-child(1n+2) {
+    text-align: right;
+}
+
+div.content section.loader {
+    display: inline-flex;
+    justify-content: flex-end;
+}
+
+div.content section.loader p {
+    font-size: 15px;
+    margin: 0.5em 2em;
+}
+
+div.content section.loader button {
+    width: 10em;
+    margin: 0.5em 0.5em;
+}
+
+div section.top button.top {
+    float: right;
+    background-color: black;
+    color: white;
+    padding: 1em 5em;
+    margin: 0.5em 2em;
+    border-radius: 1em;
+}
