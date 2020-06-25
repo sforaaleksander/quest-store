@@ -4,8 +4,7 @@ body {
     font-size: 14px;
     font-style: italic;
     color: #ddd;
-    padding: 0px;
-    padding-top: 0px;
+    padding: 0;
 }
 
 h1 {
@@ -13,8 +12,7 @@ h1 {
     background-color: black;
     font-size: 4em;
     text-align: center;
-    margin: 0;
-    margin-bottom: 0px;
+    margin: 0 0 0;
     padding: 15px;
     letter-spacing: 0.25em;
 }

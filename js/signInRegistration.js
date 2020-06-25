@@ -13,7 +13,7 @@ function checkFormAndDisplayMessage() {
 }
 
 function signInButtonValidation() {
-    return (inputEmail.value && inputPassword.value) ? true : false;
+    return inputEmail.value && inputPassword.value;
 }
 
 function clearInputs() {

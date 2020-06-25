@@ -9,7 +9,7 @@ div.content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 1em 20% 0.5em;
+    margin: 0 500px 0 500px;
 }
 
 div.content form {
