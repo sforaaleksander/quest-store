@@ -7,13 +7,17 @@ inputEmail.addEventListener("input", ()=> {signInButtonValidation()});
 inputPassword.addEventListener("input", ()=> {signInButtonValidation()})
 
 document.getElementById("signin").addEventListener("click", ()=> {checkFormAndDisplayMessage()});
+document.getElementById("signup").addEventListener("click", ()=> {checkFormAndDisplayMessage()});
 
 function checkFormAndDisplayMessage() {
     signInButtonValidation() ? clearInputs() : document.getElementById("alert").hidden = false;
 }
 
 function signInButtonValidation() {
-    return inputEmail.value && inputPassword.value;
+    if (inputEmail.value && inputPassword.value) {
+        document.getElementById("alert").hidden = true;
+    }
+    return (inputEmail.value && inputPassword.value) ? true : false;
 }
 
 function clearInputs() {

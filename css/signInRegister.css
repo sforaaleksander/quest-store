@@ -1,19 +1,21 @@
 div.content {
-    margin-top: 10%;
-    /* position: fixed;
-    margin-left: 50%; */
+    margin-top: 12%;
+    position: fixed;
+    top: 0em;
+    margin-left: 25%;
 }
 
 div.content button {
     background-color: black;
     color: white;
-    padding: 1em 2em;
+    padding: 0.5em 4em;
     border-radius: 1em;
-    font-size: 14px;
-    width: 10%;
-    box-sizing: border-box;
-    margin: 5px 5px 5px 43%;
+    font-size: 16px;
+    margin: 5px;
+    margin-left: 235px;
     align-items: center;
+    text-align: center;
+    display: inline-block;
 }
 
 div.content input {
@@ -23,7 +25,8 @@ div.content input {
     padding: 0.25em 1em;
     border-radius: 0.7em;
     box-sizing: border-box;
-    margin: 5px 5px 5px 35%;
+    margin: 5px;
+    margin-left: 35%;
 }
 
 div.content::placeholder {
@@ -35,20 +38,11 @@ div.alert {
     padding: 10px;
     background-color: #f54438;
     color: black;
-    margin-top: 0;
+    margin-top: 0px;
     width: auto;
     text-align: center;
 }
 
 .closebtn:hover {
     color: white;
-}
-
-.closebtn {
-    color: black;
-    font-weight: bold;
-    float: right;
-    font-size: 22px;
-    line-height: 20px;
-    cursor: pointer;
 }
