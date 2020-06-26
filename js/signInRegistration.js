@@ -17,7 +17,7 @@ function signInButtonValidation() {
     if (inputEmail.value && inputPassword.value) {
         document.getElementById("alert").hidden = true;
     }
-    return (inputEmail.value && inputPassword.value) ? true : false;
+    return inputEmail.value && inputPassword.value;
 }
 
 function clearInputs() {
