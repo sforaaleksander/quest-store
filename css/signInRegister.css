@@ -1,7 +1,7 @@
 div.content {
     margin-top: 12%;
     position: fixed;
-    top: 0em;
+    top: 0;
     margin-left: 25%;
 }
 
@@ -11,8 +11,7 @@ div.content button {
     padding: 0.5em 4em;
     border-radius: 1em;
     font-size: 16px;
-    margin: 5px;
-    margin-left: 235px;
+    margin: 5px 5px 5px 235px;
     align-items: center;
     text-align: center;
     display: inline-block;
@@ -25,8 +24,7 @@ div.content input {
     padding: 0.25em 1em;
     border-radius: 0.7em;
     box-sizing: border-box;
-    margin: 5px;
-    margin-left: 35%;
+    margin: 5px 5px 5px 35%;
 }
 
 div.content::placeholder {

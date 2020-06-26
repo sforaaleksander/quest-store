@@ -8,9 +8,7 @@ header {
 
 div.content {
     background-color: #414141;
-    border: solid;
-    border-color: black;
-    border-size: 0.2em;
+    border: solid black;
     display: flex;
     align-items: center;
     flex-direction: column;
