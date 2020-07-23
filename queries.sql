@@ -23,34 +23,40 @@ ORDER BY count DESC;
 
 7. Status questu, liczba questów o takim statusie, % z całkowitej liczby questów w zadanej kolejności:
 
-SELECT status, count, count * 100 / sum || '%' as percent_of_all
-from (SELECT 'Finished' AS status, count(*) as count
+SELECT status, count, count * 100 / quests_students || '%' AS percent_of_all
+FROM (SELECT quests_total * students_total AS quests_students
+      FROM (SELECT count(*) AS quests_total FROM quests) AS x,
+           (SELECT count(*) AS students_total FROM users WHERE id_role = 1 AND is_active = TRUE) AS y) AS d,
+
+     (SELECT 'Finished' AS status, count(*) AS count
       FROM quests
-               LEFT JOIN user_quests uc on uc.quest_id = quests.id
+               LEFT JOIN user_quests uc ON uc.quest_id = quests.id
       WHERE uc.accepted = TRUE
-
       UNION
-      SELECT 'Uncompleted' AS status, count(*) as count
+
+      SELECT 'Uncompleted' AS status, count(*) AS count
       FROM quests
-               LEFT JOIN user_quests uc on uc.quest_id = quests.id
+               LEFT JOIN user_quests uc ON uc.quest_id = quests.id
       WHERE uc.accepted = FALSE
-
       UNION
-      SELECT 'Never started' AS status, count(*) as count
-      FROM quests
-               LEFT JOIN user_quests uc on uc.quest_id = quests.id
-      WHERE uc.accepted is null) as a,
-     (SELECT count(*) as sum
-      FROM quests
-               LEFT JOIN user_quests uc
-                         on uc.quest_id = quests.id) as b
-group by status, count, sum
-ORDER BY case status
-             when 'Finished' then 1
-             when 'Uncompleted' then 2
-             when 'Never started' then 3
-             else 4
-             end;
+
+      SELECT 'Never started' AS status, quests_total * students_total - ASdf AS count
+      FROM (SELECT count(*) AS ASdf
+            FROM quests
+                     LEFT JOIN user_quests uc ON uc.quest_id = quests.id
+            WHERE uc.accepted is not null) AS g,
+           (SELECT count(*) AS quests_total FROM quests) AS h,
+           (SELECT count(*) AS students_total FROM users WHERE id_role = 1 AND is_active = TRUE) AS j
+         GROUP BY quests_total, students_total, ASdf
+     ) AS b
+
+GROUP BY status, count, quests_students
+ORDER BY CASE status
+             WHEN 'Finished' THEN 1
+             WHEN 'Uncompleted' THEN 2
+             WHEN 'Never started' THEN 3
+             ELSE 4
+             END;
 
 
 
