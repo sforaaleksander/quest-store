@@ -9,7 +9,9 @@ div.content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 0 500px 0 500px;
+    width: 60%;
+    margin: 0 20%;
+    min-width: 500px;
 }
 
 div.content form {
