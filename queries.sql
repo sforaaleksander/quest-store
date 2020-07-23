@@ -1,5 +1,4 @@
-1. Nazwy oraz liczba poszczególnych dla typów użytkowników, rosnąco po liczbie:
-
+-- 1. Nazwy oraz liczba poszczególnych dla typów użytkowników, rosnąco po liczbie:
 SELECT roles.name, COUNT(*) AS count
 FROM roles
          LEFT JOIN users ON id_role = roles.id
@@ -8,8 +7,7 @@ ORDER BY count;
 
 
 
-4. Nazwa klasy oraz liczba studentów przypisanych do niej, malejąco po liczbie studentów, tylko dla klas w których jest przynajmniej jeden student:
-
+-- 4. Nazwa klasy oraz liczba studentów przypisanych do niej, malejąco po liczbie studentów, tylko dla klas w których jest przynajmniej jeden student:
 SELECT classrooms.name, COUNT(*) AS count
 FROM classrooms
          LEFT JOIN user_classrooms uc on classrooms.id = uc.classroom_id
@@ -21,8 +19,7 @@ ORDER BY count DESC;
 
 
 
-7. Status questu, liczba questów o takim statusie, % z całkowitej liczby questów w zadanej kolejności:
-
+-- 7. Status questu, liczba questów o takim statusie, % z całkowitej liczby questów w zadanej kolejności:
 SELECT status, count, count * 100 / quests_students || '%' AS percent_of_all
 FROM (SELECT quests_total * students_total AS quests_students
       FROM (SELECT count(*) AS quests_total FROM quests) AS x,
@@ -60,8 +57,7 @@ ORDER BY CASE status
 
 
 
-10. Nazwisko i imię studenta oraz liczba ukończonych questów - top 5 studentów, w kolejności od studenta z największą liczbą ukończonych questów a następnie w kolejności alfabetycznej:
-
+-- 10. Nazwisko i imię studenta oraz liczba ukończonych questów - top 5 studentów, w kolejności od studenta z największą liczbą ukończonych questów a następnie w kolejności alfabetycznej:
 select distinct surname || ' ' || u.name as student, count(*) as quests_done
 from quests q
          left join user_quests uq on q.id = uq.quest_id
@@ -73,8 +69,7 @@ limit 5;
 
 
 
-13. Nazwisko i imię studenta oraz liczba zakupionych artefaktów - top 5 studentów, którzy kupili najwięcej artefaktów:
-
+-- 13. Nazwisko i imię studenta oraz liczba zakupionych artefaktów - top 5 studentów, którzy kupili najwięcej artefaktów:
 select student, sum(artifacts_bought) as bought_items
 from (select surname || ' ' || u.name as student, count(*) as artifacts_bought
       from items i
