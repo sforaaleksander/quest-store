@@ -40,14 +40,14 @@ FROM (SELECT quests_total * students_total AS quests_students
       WHERE uc.accepted = FALSE
       UNION
 
-      SELECT 'Never started' AS status, quests_total * students_total - ASdf AS count
-      FROM (SELECT count(*) AS ASdf
+      SELECT 'Never started' AS status, quests_total * students_total - started_quests AS count
+      FROM (SELECT count(*) AS started_quests
             FROM quests
                      LEFT JOIN user_quests uc ON uc.quest_id = quests.id
             WHERE uc.accepted is not null) AS g,
            (SELECT count(*) AS quests_total FROM quests) AS h,
            (SELECT count(*) AS students_total FROM users WHERE id_role = 1 AND is_active = TRUE) AS j
-         GROUP BY quests_total, students_total, ASdf
+      GROUP BY quests_total, students_total, started_quests
      ) AS b
 
 GROUP BY status, count, quests_students
