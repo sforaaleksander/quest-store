@@ -24,7 +24,14 @@ SELECT r.name AS role, COUNT(u.id) AS amount,
 GROUP BY r.name
 ORDER BY amount;
 
-
+-- 3. Nazwy, liczba aktywnych, liczba nieaktywnych, liczba aktywnych + niekatywnych dla poszczególnych typów użytkowników, roznąco po liczbie aktywnych + nieaktywnych:
+select roles.name roles, 
+	count(case when users.is_active then TRUE end) as active,
+	count(case when users.is_active = FALSE then FALSE end) as inactive,
+	sum(case when users.id_role is not NULL then 1 else 2 end) as all_users
+from users join roles on users.id_role = roles.id
+group by roles.name
+order by all_users;
 
 -- 4. Nazwa klasy oraz liczba studentów przypisanych do niej, malejąco po liczbie studentów, tylko dla klas w których jest przynajmniej jeden student:
 SELECT classrooms.name, COUNT(*) AS count
@@ -51,7 +58,32 @@ SELECT cls.name, COUNT(uc.user_id) AS amount
 GROUP BY cls.name
 ORDER BY amount DESC;
 
-
+-- 6. Nazwa klasy, liczba studentów przypisanych do niej oraz % z całkowitej liczby studentów w szkole, malejąco po liczbie studentów, alfabetycznie po nazwie klasy, dla wszystkich klas z tabeli (jeżeli nie ma studentów to liczba 0):
+SELECT
+        cls.name,
+        COUNT(uc.user_id) AS amount,
+        CONCAT(CAST(COUNT(uc.user_id)::float8 * 100 / (
+            SELECT COUNT (u.id) 
+                FROM 
+                    users u
+                INNER JOIN roles r
+                    ON r.id = u.id_role
+                WHERE
+                    u.is_active = true AND
+                    r.name = 'Student')::float8 AS int), '%')
+        AS percentage
+    FROM classrooms cls
+    LEFT JOIN user_classrooms uc
+        ON uc.classroom_id = cls.id
+    LEFT JOIN users u
+        ON uc.user_id = u.id
+    LEFT JOIN roles r
+        ON r.id = u.id_role
+    WHERE 
+        (u.is_active = true AND r.name = 'Student') OR
+        u.id IS NULL
+GROUP BY cls.name
+ORDER BY amount DESC;
 
 -- 7. Status questu, liczba questów o takim statusie, % z całkowitej liczby questów w zadanej kolejności:
 SELECT status, count, count * 100 / quests_students || '%' AS percent_of_all
@@ -99,7 +131,13 @@ GROUP BY q.name
 ORDER BY amount DESC
 LIMIT 3;
 
-
+-- 9. Nazwa questa oraz liczba studentów którzy go rozpoczęli i/lub ukończyli - top 3 najpopularniejszych rozpoczętych questów, w kolejności od najpopularniejszego:
+select quests.name as quest, count(user_quests.accepted) as top_3_most_popular 
+from quests,user_quests
+where quests.id = user_quests.quest_id
+group by quests.name
+order by top_3_most_popular desc
+limit 3;
 
 -- 10. Nazwisko i imię studenta oraz liczba ukończonych questów - top 5 studentów, w kolejności od studenta z największą liczbą ukończonych questów a następnie w kolejności alfabetycznej:
 select distinct surname || ' ' || u.name as student, count(*) as quests_done
@@ -123,6 +161,13 @@ SELECT u.surname, u.name
 		r.name = 'Student'
 ORDER BY u.surname, u.name;
 
+-- 12. Nazwa artefaktu oraz liczba jego zakupów - top 3 najczęściej kupowanych artefaktów (od najpopularniejszego).
+select items.name as item, count(user_items.item_id) as purchases 
+from items, user_items
+where items.id = user_items.item_id
+group by items.name
+order by purchases desc
+limit 3;
 
 
 -- 13. Nazwisko i imię studenta oraz liczba zakupionych artefaktów - top 5 studentów, którzy kupili najwięcej artefaktów:
