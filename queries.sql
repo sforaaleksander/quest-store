@@ -209,7 +209,23 @@ SELECT u.surname, u.name
 		r.name = 'Student'
 ORDER BY u.surname, u.name;
 
-
-
-
-
+-- 15. Nazwa kategorii, liczba artefaktów oraz % z całkowitej liczby artefaktów dla zadanych kategorii:
+SELECT 'bought at least once',
+        (SELECT COUNT(id) FROM items) - ui.amount,
+        CONCAT(CAST(((SELECT COUNT(id) FROM items) - ui.amount::float8) * 100
+              / (SELECT COUNT(id) FROM items)::float8 AS int), '%')
+        FROM
+(SELECT DISTINCT COUNT(item_id) + 
+    (SELECT DISTINCT COUNT(item_id)
+     FROM group_shopping) AS amount
+    FROM user_items) AS ui
+UNION
+SELECT 'never bought',
+        ui.amount,
+        CONCAT(CAST(ui.amount::float8 * 100
+              / (SELECT COUNT(id) FROM items)::float8 AS int), '%')
+        FROM
+(SELECT DISTINCT COUNT(item_id) + 
+    (SELECT DISTINCT COUNT(item_id)
+     FROM group_shopping) AS amount
+    FROM user_items) AS ui;
