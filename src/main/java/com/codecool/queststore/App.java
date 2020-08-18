@@ -20,7 +20,6 @@ public class App {
         server.createContext("/admin", new AdminController());
         server.createContext("/login", new LoginController());
 
-
         // start
         server.start();
     }

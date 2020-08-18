@@ -16,8 +16,8 @@ public class StudentController implements HttpHandler {
 
     }
 
-    private File getStartScreen(String json) {
-        return studentView.getStartScreenTemplate(studentService.getStudentInfo(json));
+    private void getStartScreen(HttpExchange exchange) {
+        studentView.getStartScreenTemplate(studentService.getStudentInfo(exchange.getRequestHeaders().getFirst("Cookie")));
     }
 
     private File seeWallet(String json) {

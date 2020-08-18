@@ -13,7 +13,7 @@ public class StudentService {
         return null;
     }
 
-    public Object getStudentInfo(String json) {
-        return null;
+    public Student getStudentInfo(String session) {
+        return new StudentDao().getUserBySession();
     }
 }
