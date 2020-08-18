@@ -1,4 +1,4 @@
-package com.codecool.queststore;
+package com.codecool.queststore.user;
 
 import java.util.List;
 
