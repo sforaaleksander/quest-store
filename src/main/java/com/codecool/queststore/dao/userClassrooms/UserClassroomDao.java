@@ -43,7 +43,7 @@ public class UserClassroomDao extends PostgreSqlJDBC implements Dao<UserClassroo
     @Override
     public boolean insert(UserClassroom userClassroom) {
         try {
-            String insertTemplate = "INSERT INTO user_classrooms VALUES (?,?);";
+            String insertTemplate = "INSERT INTO user_classrooms (user_id, classroom_id) VALUES (?,?);";
             PreparedStatement preparedStatement = getConnection().prepareStatement(insertTemplate);
             preparedStatement.setInt(1, userClassroom.getUserId());
             preparedStatement.setInt(2, userClassroom.getClassroomId());
