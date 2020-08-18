@@ -1,6 +1,6 @@
 package com.codecool.queststore.user.userQuests;
 
-import com.codecool.queststore.user.Dao;
+import com.codecool.queststore.dao.Dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -65,7 +65,7 @@ public class UserQuestsDao implements Dao<UserQuests> {
     }
 
     @Override
-    public boolean update(UserQuests userQuests) {
+    public boolean update(UserQuests userQuests, UserQuests ignored) {
         try {
             PreparedStatement stmt = c.prepareStatement(
                     "UPDATE user_quests SET quest_id = ?, user_id = ?, done_date = ?, accepted = ? WHERE id = ?;");

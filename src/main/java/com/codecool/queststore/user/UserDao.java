@@ -1,5 +1,7 @@
 package com.codecool.queststore.user;
 
+import com.codecool.queststore.dao.Dao;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -65,7 +67,7 @@ public class UserDao implements Dao<User> {
     }
 
     @Override
-    public boolean update(User user) {
+    public boolean update(User user, User ignored) {
         try {
             PreparedStatement stmt = c.prepareStatement(
                     "UPDATE users SET name = ?, surname = ?, password = ?, email = ?, id_role = ?, is_active = ? WHERE id = ?;");
