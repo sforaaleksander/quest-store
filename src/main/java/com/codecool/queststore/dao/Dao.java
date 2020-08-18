@@ -1,4 +1,4 @@
-package com.codecool.queststore.user;
+package com.codecool.queststore.dao;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ public interface Dao<T> {
 
     boolean insert(T t);
 
-    boolean update(T t);
+    boolean update(T t, T u);
 
     boolean delete(T t);
 }
