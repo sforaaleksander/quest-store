@@ -6,20 +6,22 @@ import com.codecool.queststore.dao.PostgreSqlJDBC;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClassroomDao extends PostgreSqlJDBC implements Dao<Classroom> {
+
     @Override
     public List<Classroom> get(String condition) {
         List<Classroom> classrooms = new ArrayList<>();
         try {
-            PreparedStatement preparedStatement = getConnection()
-                    .prepareStatement("SELECT * FROM classrooms WHERE ?");
-            preparedStatement.setString(1, condition);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            Statement statement = getConnection()
+                    .createStatement();
+            ResultSet resultSet = statement.executeQuery(
+                    String.format("SELECT * FROM classrooms WHERE %s;", condition));
             classrooms = createClassroomsFromResultSet(resultSet);
-            preparedStatement.close();
+            statement.close();
             resultSet.close();
             closeConnection();
         } catch (SQLException e) {
@@ -28,22 +30,64 @@ public class ClassroomDao extends PostgreSqlJDBC implements Dao<Classroom> {
         return classrooms;
     }
 
-    private List<Classroom> createClassroomsFromResultSet(ResultSet resultSet) {
-        return null;
+    private List<Classroom> createClassroomsFromResultSet(ResultSet resultSet) throws SQLException {
+        List<Classroom> classrooms = new ArrayList<>();
+        while (resultSet.next()) {
+            classrooms.add(new Classroom(
+                    resultSet.getInt("id"),
+                    resultSet.getString("name")
+            ));
+        }
+        return classrooms;
     }
 
     @Override
     public boolean insert(Classroom classroom) {
-        return false;
+        try {
+            String insertTemplate = "INSERT INTO classrooms (name) VALUES (?);";
+            PreparedStatement preparedStatement = getConnection().prepareStatement(insertTemplate);
+            preparedStatement.setString(1, classroom.getName());
+            preparedStatement.execute();
+            preparedStatement.close();
+            closeConnection();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
-    public boolean update(Classroom classroom, Classroom updatedClassroom) {
-        return false;
+    public boolean update(Classroom oldClassroom, Classroom updatedClassroom) {
+        try {
+            String updateTemplate = "UPDATE classrooms SET name=? WHERE id=? AND name=?;";
+            PreparedStatement preparedStatement = getConnection().prepareStatement(updateTemplate);
+            preparedStatement.setString(1, updatedClassroom.getName());
+            preparedStatement.setInt(2, oldClassroom.getId());
+            preparedStatement.setString(3, oldClassroom.getName());
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+            closeConnection();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
     public boolean delete(Classroom classroom) {
-        return false;
+        try {
+            String deleteTemplate = "DELETE FROM classrooms WHERE id=? AND name='?';";
+            PreparedStatement preparedStatement = getConnection().prepareStatement(deleteTemplate);
+            preparedStatement.setInt(1, classroom.getId());
+            preparedStatement.setString(2, classroom.getName());
+            preparedStatement.close();
+            closeConnection();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

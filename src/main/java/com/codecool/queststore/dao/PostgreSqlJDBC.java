@@ -10,19 +10,17 @@ public class PostgreSqlJDBC {
     private String user;
     private String password;
 
-    private void connect() {
-        try {
-            connection = DriverManager.getConnection(url, user, password); // set user and password
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            System.exit(0);
-        }
-        System.out.println("Opened database successfully");
-    }
-
     public Connection getConnection() {
-        connect();
+        if (connection == null) {
+            try {
+                connection = DriverManager.getConnection(url, user, password); // set user and password
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.err.println(e.getClass().getName() + ": " + e.getMessage());
+                System.exit(0);
+            }
+            System.out.println("Opened database successfully");
+        }
         return connection;
     }
 
