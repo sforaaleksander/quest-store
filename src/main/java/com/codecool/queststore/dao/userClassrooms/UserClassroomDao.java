@@ -10,11 +10,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserClassroomsDao extends PostgreSqlJDBC implements Dao<UserClassrooms> {
+public class UserClassroomDao extends PostgreSqlJDBC implements Dao<UserClassroom> {
 
     @Override
-    public List<UserClassrooms> get(String condition) {
-        List<UserClassrooms> userClassrooms = new ArrayList<>();
+    public List<UserClassroom> get(String condition) {
+        List<UserClassroom> userClassrooms = new ArrayList<>();
         try {
             Statement statement = getConnection().createStatement();
             ResultSet resultSet = statement.executeQuery(String.format("SELECT * FROM user_classrooms WHERE %s;",condition));
@@ -28,26 +28,25 @@ public class UserClassroomsDao extends PostgreSqlJDBC implements Dao<UserClassro
         return userClassrooms;
     }
 
-    private List<UserClassrooms> createUserClassrooms(ResultSet resultSet) throws SQLException {
-        List<UserClassrooms> userClassroomsList = new ArrayList<>();
-        UserClassrooms userClassrooms;
+    private List<UserClassroom> createUserClassrooms(ResultSet resultSet) throws SQLException {
+        List<UserClassroom> userClassroomList = new ArrayList<>();
+        UserClassroom userClassroom;
         while (resultSet.next()) {
             int userId = resultSet.getInt("user_id");
             int classroomId = resultSet.getInt("classroom_id");
-            userClassrooms = new UserClassrooms(userId, classroomId);
-            userClassroomsList.add(userClassrooms);
+            userClassroom = new UserClassroom(userId, classroomId);
+            userClassroomList.add(userClassroom);
         }
-        return userClassroomsList;
+        return userClassroomList;
     }
 
     @Override
-    public boolean insert(UserClassrooms userClassrooms) {
+    public boolean insert(UserClassroom userClassroom) {
         try {
             String insertTemplate = "INSERT INTO user_classrooms VALUES (?,?);";
-            PreparedStatement preparedStatement = getConnection()
-                    .prepareStatement(insertTemplate);
-            preparedStatement.setInt(1,userClassrooms.getUserId());
-            preparedStatement.setInt(2,userClassrooms.getClassroomId());
+            PreparedStatement preparedStatement = getConnection().prepareStatement(insertTemplate);
+            preparedStatement.setInt(1, userClassroom.getUserId());
+            preparedStatement.setInt(2, userClassroom.getClassroomId());
             ResultSet resultSet = preparedStatement.executeQuery();
             preparedStatement.close();
             resultSet.close();
@@ -60,15 +59,15 @@ public class UserClassroomsDao extends PostgreSqlJDBC implements Dao<UserClassro
     }
 
     @Override
-    public boolean update(UserClassrooms userClassrooms, UserClassrooms updatedUserClassrooms) {
+    public boolean update(UserClassroom userClassroom, UserClassroom updatedUserClassroom) {
         try {
             String updateTemplate = "UPDATE user_classrooms SET user_id=? AND classroom_id=? WHERE user_id=? AND classroom_id=?;";
             PreparedStatement preparedStatement = getConnection()
                     .prepareStatement(updateTemplate);
-            preparedStatement.setInt(1,userClassrooms.getUserId());
-            preparedStatement.setInt(2,userClassrooms.getClassroomId());
-            preparedStatement.setInt(3,userClassrooms.getUserId());
-            preparedStatement.setInt(4,userClassrooms.getClassroomId());
+            preparedStatement.setInt(1, updatedUserClassroom.getUserId());
+            preparedStatement.setInt(2, updatedUserClassroom.getClassroomId());
+            preparedStatement.setInt(3, userClassroom.getUserId());
+            preparedStatement.setInt(4, userClassroom.getClassroomId());
             ResultSet resultSet = preparedStatement.executeQuery();
             preparedStatement.close();
             resultSet.close();
@@ -81,13 +80,13 @@ public class UserClassroomsDao extends PostgreSqlJDBC implements Dao<UserClassro
     }
 
     @Override
-    public boolean delete(UserClassrooms userClassrooms) {
+    public boolean delete(UserClassroom userClassroom) {
         try {
             String deleteTemplate = "DELETE FROM user_classrooms WHERE user_id=? AND classroom_id=?;";
             PreparedStatement preparedStatement = getConnection()
                     .prepareStatement(deleteTemplate);
-            preparedStatement.setInt(1,userClassrooms.getUserId());
-            preparedStatement.setInt(2,userClassrooms.getClassroomId());
+            preparedStatement.setInt(1, userClassroom.getUserId());
+            preparedStatement.setInt(2, userClassroom.getClassroomId());
             ResultSet resultSet = preparedStatement.executeQuery();
             preparedStatement.close();
             resultSet.close();
