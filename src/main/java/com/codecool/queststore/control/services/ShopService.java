@@ -41,18 +41,13 @@ public class ShopService {
         return categoryDao.insert(new Category().setName(categoryName));
     }
 
-    public boolean addObjectToCategory(int objectId, String categoryName) {
-        //to samo co w changeObjectCategory jak rozroznic
+    public boolean changeItemCategory(int itemId, String categoryName) {
         int categoryId = categoryDao.get(String.format("name=%s LIMIT 1", categoryName)).get(0).getId();
-        // object ?
-        questDao.update(questDao.get(String.format("id=%d LIMIT 1", objectId)).get(0).setCategoryId(categoryId));
-        return itemDao.update(itemDao.get(String.format("id=%d LIMIT 1", objectId)).get(0).setCategoryId(categoryId));
+        return itemDao.update(itemDao.get(String.format("id=%d LIMIT 1", itemId)).get(0).setCategoryId(categoryId));
     }
 
-    public boolean changeObjectCategory(int objectId, String categoryName) {
+    public boolean changeQuestCategory(int questId, String categoryName) {
         int categoryId = categoryDao.get(String.format("name=%s LIMIT 1", categoryName)).get(0).getId();
-        // object ?
-        questDao.update(questDao.get(String.format("id=%d LIMIT 1", objectId)).get(0).setCategoryId(categoryId));
-        return itemDao.update(itemDao.get(String.format("id=%d LIMIT 1", objectId)).get(0).setCategoryId(categoryId));
+        return questDao.update(questDao.get(String.format("id=%d LIMIT 1", questId)).get(0).setCategoryId(categoryId));
     }
 }

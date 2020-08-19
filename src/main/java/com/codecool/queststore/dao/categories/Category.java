@@ -4,10 +4,6 @@ public class Category {
     private int id;
     private String name;
 
-//    public Category(int id, String name) {
-//        this.id = id;
-//        this.name = name;
-//    }
     public Category() {
     }
 
@@ -28,8 +24,4 @@ public class Category {
         this.name = name;
         return this;
     }
-
-//    public Category createCategory() {
-//        return new Category(id, name);
-//    }
 }
