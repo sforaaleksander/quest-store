@@ -1,26 +1,21 @@
 package com.codecool.queststore.dao.userItems;
 
 import com.codecool.queststore.dao.Dao;
+import com.codecool.queststore.dao.PostgreSqlJDBC;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserItemsDao implements Dao<UserItems> {
-    private final Connection c;
-
-    public UserItemsDao(Connection connection) {
-        c = connection;
-    }
+public class UserItemsDao extends PostgreSqlJDBC implements Dao<UserItems> {
 
     @Override
     public List<UserItems> get(String condition) {
         String query = String.format("SELECT * FROM user_items WHERE %s;", condition);
         List<UserItems> userItems = new ArrayList<>();
-        try (PreparedStatement stmt = c.prepareStatement(query)
+        try (PreparedStatement stmt = getConnection().prepareStatement(query)
         ) {
             ResultSet results = stmt.executeQuery();
             fillList(results, userItems);
@@ -50,7 +45,7 @@ public class UserItemsDao implements Dao<UserItems> {
     @Override
     public boolean insert(UserItems userItems) {
         try {
-            PreparedStatement stmt = c.prepareStatement(
+            PreparedStatement stmt = getConnection().prepareStatement(
                     "INSERT INTO user_items (item_id, user_id, bought_date, is_used)" +
                             " VALUES (?, ?, ?, ?);");
             stmt.setInt(1, userItems.getItemId());
@@ -67,7 +62,7 @@ public class UserItemsDao implements Dao<UserItems> {
     @Override
     public boolean update(UserItems userItems) {
         try {
-            PreparedStatement stmt = c.prepareStatement(
+            PreparedStatement stmt = getConnection().prepareStatement(
                     "UPDATE user_items SET item_id = ?, user_id = ?, bought_date = ?, is_used = ? WHERE id = ?;");
             stmt.setInt(1, userItems.getItemId());
             stmt.setInt(2, userItems.getUserId());
@@ -84,7 +79,7 @@ public class UserItemsDao implements Dao<UserItems> {
     @Override
     public boolean delete(UserItems userItem) {
         try {
-            PreparedStatement stmt = c.prepareStatement(
+            PreparedStatement stmt = getConnection().prepareStatement(
                     "DELETE FROM user_items WHERE id = ?;");
             stmt.setInt(1, userItem.getId());
             stmt.executeUpdate();

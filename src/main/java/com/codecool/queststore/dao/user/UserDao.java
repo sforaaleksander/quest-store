@@ -1,26 +1,21 @@
 package com.codecool.queststore.dao.user;
 
 import com.codecool.queststore.dao.Dao;
+import com.codecool.queststore.dao.PostgreSqlJDBC;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDao implements Dao<User> {
-    private final Connection c;
-
-    public UserDao(Connection connection) {
-        c = connection;
-    }
+public class UserDao extends PostgreSqlJDBC implements Dao<User> {
 
     @Override
     public List<User> get(String condition) {
         String query = String.format("SELECT * FROM users WHERE %s;", condition);
         List<User> users = new ArrayList<>();
-        try (PreparedStatement stmt = c.prepareStatement(query)
+        try (PreparedStatement stmt = getConnection().prepareStatement(query)
         ) {
             ResultSet results = stmt.executeQuery();
             fillList(results, users);
@@ -50,7 +45,7 @@ public class UserDao implements Dao<User> {
     @Override
     public boolean insert(User user) {
         try {
-            PreparedStatement stmt = c.prepareStatement(
+            PreparedStatement stmt = getConnection().prepareStatement(
                     "INSERT INTO users (name, surname, password, email, id_role, is_active)" +
                             " VALUES (?, ?, ?, ?, ?, ?);");
             stmt.setString(1, user.getName());
@@ -69,7 +64,7 @@ public class UserDao implements Dao<User> {
     @Override
     public boolean update(User user) {
         try {
-            PreparedStatement stmt = c.prepareStatement(
+            PreparedStatement stmt = getConnection().prepareStatement(
                     "UPDATE users SET name = ?, surname = ?, password = ?, email = ?, id_role = ?, is_active = ? WHERE id = ?;");
             stmt.setString(1, user.getName());
             stmt.setString(2, user.getSurname());
@@ -88,7 +83,7 @@ public class UserDao implements Dao<User> {
     @Override
     public boolean delete(User user) {
         try {
-            PreparedStatement stmt = c.prepareStatement(
+            PreparedStatement stmt = getConnection().prepareStatement(
                     "DELETE FROM users WHERE id = ?;");
             stmt.setInt(1, user.getId());
             stmt.executeUpdate();
