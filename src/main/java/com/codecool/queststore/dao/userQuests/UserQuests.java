@@ -9,7 +9,7 @@ public class UserQuests {
     private Date doneDate;
     private boolean accepted;
 
-    int getId() {
+    public int getId() {
         return id;
     }
 
@@ -18,7 +18,7 @@ public class UserQuests {
         return this;
     }
 
-    int getQuestId() {
+    public int getQuestId() {
         return questId;
     }
 
@@ -27,7 +27,7 @@ public class UserQuests {
         return this;
     }
 
-    int getUserId() {
+    public int getUserId() {
         return userId;
     }
 
@@ -36,7 +36,7 @@ public class UserQuests {
         return this;
     }
 
-    Date getDoneDate() {
+    public Date getDoneDate() {
         return doneDate;
     }
 
@@ -45,7 +45,7 @@ public class UserQuests {
         return this;
     }
 
-    boolean isAccepted() {
+    public boolean isAccepted() {
         return accepted;
     }
 
