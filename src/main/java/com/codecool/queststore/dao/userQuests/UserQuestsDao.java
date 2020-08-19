@@ -65,7 +65,7 @@ public class UserQuestsDao implements Dao<UserQuests> {
     }
 
     @Override
-    public boolean update(UserQuests userQuests, UserQuests ignored) {
+    public boolean update(UserQuests userQuests) {
         try {
             PreparedStatement stmt = c.prepareStatement(
                     "UPDATE user_quests SET quest_id = ?, user_id = ?, done_date = ?, accepted = ? WHERE id = ?;");

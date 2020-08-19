@@ -65,7 +65,7 @@ public class UserItemsDao implements Dao<UserItems> {
     }
 
     @Override
-    public boolean update(UserItems userItems, UserItems ignored) {
+    public boolean update(UserItems userItems) {
         try {
             PreparedStatement stmt = c.prepareStatement(
                     "UPDATE user_items SET item_id = ?, user_id = ?, bought_date = ?, is_used = ? WHERE id = ?;");
