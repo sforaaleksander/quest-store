@@ -25,8 +25,12 @@ public class UserService {
                 .setEmail(email).setIdRole(roleId).setActive(true));
     }
 
-    public void editMentorProfile(String data) {
-
+    public void editMentorProfile(int mentorId, String name, String surname, String password,
+                                  String email, boolean isActive) {
+        User mentorToEdit = userDao.get(String.format("id=%d LIMIT 1", mentorId)).get(0);
+        mentorToEdit.setName(name).setSurname(surname).setPassword(password)
+                .setEmail(email).setActive(isActive);
+        userDao.update(mentorToEdit);
     }
 
     public Object seeMentorProfile(String data) {
