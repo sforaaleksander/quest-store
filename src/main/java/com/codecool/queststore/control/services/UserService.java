@@ -1,17 +1,28 @@
 package com.codecool.queststore.control.services;
 
 import com.codecool.queststore.dao.Dao;
-import com.codecool.queststore.user.User;
-import com.codecool.queststore.user.UserDao;
+import com.codecool.queststore.dao.PostgreSqlJDBC;
+import com.codecool.queststore.dao.roles.Role;
+import com.codecool.queststore.dao.roles.RoleDao;
+import com.codecool.queststore.dao.user.User;
+import com.codecool.queststore.dao.user.UserDao;
 
 public class UserService {
 
-    public void addStudent(String... data) {
+    private Dao<User> userDao = new UserDao(new PostgreSqlJDBC().getConnection());
+    private Dao<Role> roleDao = new RoleDao();
 
+    public void addStudent(String name, String surname, String password, String email) {
+        addUser(name, surname, password, email, roleDao.get("name='student' LIMIT 1").get(0).getId());
     }
 
-    public void addMentor(String... someData) {
+    public void addMentor(String name, String surname, String password, String email) {
+        addUser(name, surname, password, email, roleDao.get("name='mentor' LIMIT 1").get(0).getId());
+    }
 
+    private void addUser(String name, String surname, String password, String email, int roleId) {
+        userDao.insert(new User().setName(name).setSurname(surname).setPassword(password)
+                .setEmail(email).setIdRole(roleId).setActive(true));
     }
 
     public void editMentorProfile(String data) {
