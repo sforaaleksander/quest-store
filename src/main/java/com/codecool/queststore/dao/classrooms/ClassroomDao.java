@@ -33,10 +33,8 @@ public class ClassroomDao extends PostgreSqlJDBC implements Dao<Classroom> {
     private List<Classroom> createClassroomsFromResultSet(ResultSet resultSet) throws SQLException {
         List<Classroom> classrooms = new ArrayList<>();
         while (resultSet.next()) {
-            classrooms.add(new Classroom(
-                    resultSet.getInt("id"),
-                    resultSet.getString("name")
-            ));
+            classrooms.add(new Classroom().setId(resultSet.getInt("id"))
+                    .setName(resultSet.getString("name")));
         }
         return classrooms;
     }
@@ -58,13 +56,13 @@ public class ClassroomDao extends PostgreSqlJDBC implements Dao<Classroom> {
     }
 
     @Override
-    public boolean update(Classroom oldClassroom, Classroom updatedClassroom) {
+    public boolean update(Classroom classroom) {
         try {
-            String updateTemplate = "UPDATE classrooms SET name=? WHERE id=? AND name=?;";
+            String updateTemplate = "UPDATE classrooms SET name=? WHERE id=?";
             PreparedStatement preparedStatement = getConnection().prepareStatement(updateTemplate);
-            preparedStatement.setString(1, updatedClassroom.getName());
-            preparedStatement.setInt(2, oldClassroom.getId());
-            preparedStatement.setString(3, oldClassroom.getName());
+            preparedStatement.setString(1, classroom.getName());
+            preparedStatement.setInt(2, classroom.getId());
+            preparedStatement.setString(3,classroom.getName());
             preparedStatement.executeUpdate();
             preparedStatement.close();
             closeConnection();
