@@ -57,13 +57,12 @@ public class CategoryDao extends PostgreSqlJDBC implements Dao<Category> {
     }
 
     @Override
-    public boolean update(Category category, Category updatedCategory) {
+    public boolean update(Category category) {
         try {
-            String updateTemplate = "UPDATE categories SET name=? WHERE id=? AND name=?;";
+            String updateTemplate = "UPDATE categories SET name=? WHERE id=?;";
             PreparedStatement preparedStatement = getConnection().prepareStatement(updateTemplate);
-            preparedStatement.setString(1, updatedCategory.getName());
+            preparedStatement.setString(1, category.getName());
             preparedStatement.setInt(2, category.getId());
-            preparedStatement.setString(3, category.getName());
             preparedStatement.executeUpdate();
             preparedStatement.close();
             closeConnection();

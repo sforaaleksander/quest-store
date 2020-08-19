@@ -64,22 +64,18 @@ public class StudentShoppingDao extends PostgreSqlJDBC implements Dao<StudentSho
     }
 
     @Override
-    public boolean update(StudentShopping studentShopping, StudentShopping updatedStudentShopping) {
+    public boolean update(StudentShopping studentShopping) {
         try {
             String updateTemplate = "UPDATE students_shopping " +
                     "SET user_id=?, shopping_id=?, confirmed_date=?, confirmed=? " +
-                    "WHERE user_id=? AND shopping_id=? AND confirmed_date=? AND confirmed=?;";
+                    "WHERE user_id=?;";
 
             PreparedStatement preparedStatement = getConnection().prepareStatement(updateTemplate);
+            preparedStatement.setInt(1, studentShopping.getUserId());
+            preparedStatement.setInt(2, studentShopping.getShoppingId());
+            preparedStatement.setDate(3, studentShopping.getConfirmedDate());
+            preparedStatement.setBoolean(4, studentShopping.isConfirmed());
             preparedStatement.setInt(5,studentShopping.getUserId());
-            preparedStatement.setInt(6, studentShopping.getShoppingId());
-            preparedStatement.setDate(7, studentShopping.getConfirmedDate());
-            preparedStatement.setBoolean(8, studentShopping.isConfirmed());
-
-            preparedStatement.setInt(1, updatedStudentShopping.getUserId());
-            preparedStatement.setInt(2, updatedStudentShopping.getShoppingId());
-            preparedStatement.setDate(3, updatedStudentShopping.getConfirmedDate());
-            preparedStatement.setBoolean(4, updatedStudentShopping.isConfirmed());
 
             preparedStatement.executeUpdate();
             preparedStatement.close();
