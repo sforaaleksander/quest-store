@@ -9,7 +9,7 @@ public class UserItems {
     private Date boughtDate;
     private boolean isUsed;
 
-    int getId() {
+    public int getId() {
         return id;
     }
 
@@ -18,7 +18,7 @@ public class UserItems {
         return this;
     }
 
-    int getItemId() {
+    public int getItemId() {
         return itemId;
     }
 
@@ -27,7 +27,7 @@ public class UserItems {
         return this;
     }
 
-    int getUserId() {
+    public int getUserId() {
         return userId;
     }
 
@@ -36,7 +36,7 @@ public class UserItems {
         return this;
     }
 
-    Date getBoughtDate() {
+    public Date getBoughtDate() {
         return boughtDate;
     }
 
@@ -45,7 +45,7 @@ public class UserItems {
         return this;
     }
 
-    boolean isUsed() {
+    public boolean isUsed() {
         return isUsed;
     }
 
