@@ -35,7 +35,19 @@ public class TradingService {
     public boolean acceptUserQuest(int userQuestId) {
         UserQuests userQuestToAccept = userQuestDao.get(String.format("id=%d LIMIT 1", userQuestId)).get(0);
         userQuestToAccept.setAccepted(true);
-        return userQuestDao.update(userQuestToAccept);
+        int userId = userQuestToAccept.getUserId();
+        int questId = userQuestToAccept.getQuestId();
+        int amountToAdd = questDao.get(String.format("id=%d LIMIT 1", questId)).get(0).getCost();
+        Balance previousBalance = balanceDao.get(String.format("user_id=%d LIMIT 1", userId)).get(0);
+        boolean isAdded = balanceDao.update(new Balance().setUserId(userId)
+                                                         .setAmount(previousBalance.getAmount() + amountToAdd)
+                                                         .setTotalEarned(previousBalance.getTotalEarned() + amountToAdd));
+        if (isAdded) {
+            return userQuestDao.update(userQuestToAccept);
+        } else {
+            return false;
+        }
+//        return userQuestDao.update(userQuestToAccept);
     }
 
     public boolean addUserItem(int itemId, int userId) {
