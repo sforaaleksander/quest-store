@@ -1,34 +1,58 @@
 package com.codecool.queststore.control.services;
 
+import com.codecool.queststore.dao.Dao;
+import com.codecool.queststore.dao.categories.Category;
+import com.codecool.queststore.dao.categories.CategoryDao;
+import com.codecool.queststore.dao.items.Item;
+import com.codecool.queststore.dao.items.ItemDao;
+import com.codecool.queststore.dao.quests.Quest;
+import com.codecool.queststore.dao.quests.QuestDao;
+
 public class ShopService {
+    private Dao<Item> itemDao = new ItemDao();
+    private Dao<Quest> questDao = new QuestDao();
+    private Dao<Category> categoryDao = new CategoryDao();
 
-    public void addItem() {
-
+    public boolean addItem(String name, String description, int cost) {
+        return addItemOrQuest(name, description, cost, categoryDao.get("name='item' LIMIT 1").get(0).getId());
     }
 
-    public void editItem() {
-
+    private boolean addItemOrQuest(String name, String description, int cost, int categoryId) {
+        return itemDao.insert(new Item().setName(name).setDescription(description).setCost(cost).setCategoryId(categoryId));
     }
 
-    public void addQuest() {
-
+    public boolean editItem(int id, String name, String description, int cost) {
+        Item itemToEdit = itemDao.get(String.format("id=%d LIMIT 1", id)).get(0);
+        itemToEdit.setName(name).setDescription(description).setCost(cost);
+        return itemDao.update(itemToEdit);
     }
 
-    public void editQuest() {
-
+    public boolean addQuest(String name, String description, int cost) {
+        return addItemOrQuest(name, description, cost, categoryDao.get("name='quest' LIMIT 1").get(0).getId());
     }
 
-    public void addCategory() {
-
+    public boolean editQuest(int id, String name, String description, int cost) {
+        Quest questToEdit = questDao.get(String.format("id=%d LIMIT 1", id)).get(0);
+        questToEdit.setName(name).setDescription(description).setCost(cost);
+        return questDao.update(questToEdit);
     }
 
-    public void addObjectToCategory() {
-
+    public boolean addCategory(String categoryName) {
+        return categoryDao.insert(new Category().setName(categoryName));
     }
 
-    public void changeObjectCategory() {
-
+    public boolean addObjectToCategory(int objectId, String categoryName) {
+        //to samo co w changeObjectCategory jak rozroznic
+        int categoryId = categoryDao.get(String.format("name=%s LIMIT 1", categoryName)).get(0).getId();
+        // object ?
+        questDao.update(questDao.get(String.format("id=%d LIMIT 1", objectId)).get(0).setCategoryId(categoryId));
+        return itemDao.update(itemDao.get(String.format("id=%d LIMIT 1", objectId)).get(0).setCategoryId(categoryId));
     }
 
-
+    public boolean changeObjectCategory(int objectId, String categoryName) {
+        int categoryId = categoryDao.get(String.format("name=%s LIMIT 1", categoryName)).get(0).getId();
+        // object ?
+        questDao.update(questDao.get(String.format("id=%d LIMIT 1", objectId)).get(0).setCategoryId(categoryId));
+        return itemDao.update(itemDao.get(String.format("id=%d LIMIT 1", objectId)).get(0).setCategoryId(categoryId));
+    }
 }
