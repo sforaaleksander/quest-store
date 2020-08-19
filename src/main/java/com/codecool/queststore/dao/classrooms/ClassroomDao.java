@@ -33,10 +33,8 @@ public class ClassroomDao extends PostgreSqlJDBC implements Dao<Classroom> {
     private List<Classroom> createClassroomsFromResultSet(ResultSet resultSet) throws SQLException {
         List<Classroom> classrooms = new ArrayList<>();
         while (resultSet.next()) {
-            classrooms.add(new Classroom(
-                    resultSet.getInt("id"),
-                    resultSet.getString("name")
-            ));
+            classrooms.add(new Classroom().setId(resultSet.getInt("id"))
+                    .setName(resultSet.getString("name")));
         }
         return classrooms;
     }
