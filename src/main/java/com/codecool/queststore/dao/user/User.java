@@ -12,7 +12,7 @@ public class User {
     public User() {
     }
 
-    int getId() {
+    public int getId() {
         return id;
     }
 
@@ -21,7 +21,7 @@ public class User {
         return this;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
@@ -30,7 +30,7 @@ public class User {
         return this;
     }
 
-    String getSurname() {
+    public String getSurname() {
         return surname;
     }
 
@@ -39,7 +39,7 @@ public class User {
         return this;
     }
 
-    String getPassword() {
+    public String getPassword() {
         return password;
     }
 
@@ -48,7 +48,7 @@ public class User {
         return this;
     }
 
-    String getEmail() {
+    public String getEmail() {
         return email;
     }
 
@@ -57,7 +57,7 @@ public class User {
         return this;
     }
 
-    int getIdRole() {
+    public int getIdRole() {
         return idRole;
     }
 
@@ -66,7 +66,7 @@ public class User {
         return this;
     }
 
-    boolean isActive() {
+    public boolean isActive() {
         return isActive;
     }
 
