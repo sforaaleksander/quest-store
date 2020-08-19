@@ -1,4 +1,4 @@
-package com.codecool.queststore.user.userItems;
+package com.codecool.queststore.dao.userItems;
 
 import java.sql.Date;
 

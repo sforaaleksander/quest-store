@@ -1,4 +1,4 @@
-package com.codecool.queststore.user;
+package com.codecool.queststore.dao.user;
 
 import com.codecool.queststore.dao.Dao;
 
