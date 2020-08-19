@@ -60,19 +60,17 @@ public class SessionDao extends PostgreSqlJDBC implements Dao<Session> {
     }
 
     @Override
-    public boolean update(Session oldSession, Session updatedSession) {
+    public boolean update(Session session) {
         try {
             String updateTemplate = "UPDATE sessions " +
-                    "SET session_id=?, user_id=?, login_timestamp=?, logout_timestamp=?, is_active=? " +
+                    "SET login_timestamp=?, logout_timestamp=?, is_active=? " +
                     "WHERE session_id=? AND user_id=?;";
             PreparedStatement preparedStatement = getConnection().prepareStatement(updateTemplate);
-            preparedStatement.setString(1, updatedSession.getSessionId());
-            preparedStatement.setInt(2, updatedSession.getUserId());
-            preparedStatement.setTimestamp(3, updatedSession.getLoginTimestamp());
-            preparedStatement.setTimestamp(4, updatedSession.getLogoutTimestamp());
-            preparedStatement.setBoolean(5, updatedSession.isActive());
-            preparedStatement.setString(6, oldSession.getSessionId());
-            preparedStatement.setInt(7, oldSession.getUserId());
+            preparedStatement.setTimestamp(1, session.getLoginTimestamp());
+            preparedStatement.setTimestamp(2, session.getLogoutTimestamp());
+            preparedStatement.setBoolean(3, session.isActive());
+            preparedStatement.setString(4, session.getSessionId());
+            preparedStatement.setInt(5, session.getUserId());
             preparedStatement.execute();
             preparedStatement.close();
             closeConnection();

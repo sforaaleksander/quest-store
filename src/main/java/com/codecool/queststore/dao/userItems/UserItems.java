@@ -13,7 +13,7 @@ public class UserItems {
         return id;
     }
 
-    UserItems setId(int id) {
+    public UserItems setId(int id) {
         this.id = id;
         return this;
     }
@@ -22,7 +22,7 @@ public class UserItems {
         return itemId;
     }
 
-    UserItems setItemId(int itemId) {
+    public UserItems setItemId(int itemId) {
         this.itemId = itemId;
         return this;
     }
@@ -31,7 +31,7 @@ public class UserItems {
         return userId;
     }
 
-    UserItems setUserId(int userId) {
+    public UserItems setUserId(int userId) {
         this.userId = userId;
         return this;
     }
@@ -40,7 +40,7 @@ public class UserItems {
         return boughtDate;
     }
 
-    UserItems setBoughtDate(Date boughtDate) {
+    public UserItems setBoughtDate(Date boughtDate) {
         this.boughtDate = boughtDate;
         return this;
     }
@@ -49,7 +49,7 @@ public class UserItems {
         return isUsed;
     }
 
-    UserItems setUsed(boolean used) {
+    public UserItems setUsed(boolean used) {
         isUsed = used;
         return this;
     }
