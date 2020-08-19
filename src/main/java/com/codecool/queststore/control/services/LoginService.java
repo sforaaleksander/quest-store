@@ -88,10 +88,10 @@ public class LoginService {
         sessionDao.update(activeSession);
     }
 
-    public User getLoggedUserBySessionId(String sessionId) {
-        var session = sessionDao.get(String.format("session_id = %s", sessionId)).get(0);
-        int userId = session.getUserId();
-
-        return userDao.get(String.format("id = %d", userId)).get(0);
+    public Optional<User> getLoggedUserBySessionId(String sessionId) {
+        List<Session> sessions = sessionDao.get(
+                String.format("session_id = %s AND is_active=true LIMIT 1", sessionId));
+        if (sessions.isEmpty()) return Optional.empty();
+        return Optional.of(userDao.get(String.format("id = %d", sessions.get(0).getUserId())).get(0));
     }
 }
