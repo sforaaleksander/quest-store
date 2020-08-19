@@ -67,7 +67,7 @@ public class UserDao implements Dao<User> {
     }
 
     @Override
-    public boolean update(User user, User ignored) {
+    public boolean update(User user) {
         try {
             PreparedStatement stmt = c.prepareStatement(
                     "UPDATE users SET name = ?, surname = ?, password = ?, email = ?, id_role = ?, is_active = ? WHERE id = ?;");

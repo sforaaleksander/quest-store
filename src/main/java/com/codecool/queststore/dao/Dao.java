@@ -7,7 +7,7 @@ public interface Dao<T> {
 
     boolean insert(T t);
 
-    boolean update(T t, T u);
+    boolean update(T t);
 
     boolean delete(T t);
 }
