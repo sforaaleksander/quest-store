@@ -56,8 +56,13 @@ public class TradingService {
         int itemCost = itemToBuy.getCost();
         int userBalance = getStudentCoinsAmount(userId);
         if (userBalance < itemCost) return false;
-        return userItemDao.insert(new UserItems().setItemId(itemToBuy.getId()).setUserId(userId)
-                .setBoughtDate(Date.valueOf(LocalDate.now())).setUsed(false));
+        boolean isAdded = balanceDao.update(new Balance().setUserId(userId)
+                .setAmount(userBalance - itemCost));
+        if (isAdded) {
+            return userItemDao.insert(new UserItems().setItemId(itemToBuy.getId()).setUserId(userId)
+                    .setBoughtDate(Date.valueOf(LocalDate.now())).setUsed(false));
+        }
+        return false;
     }
 
     private boolean makeGroupShopping() {
