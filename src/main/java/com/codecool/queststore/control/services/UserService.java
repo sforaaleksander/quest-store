@@ -57,7 +57,8 @@ public class UserService {
     public boolean addUserToClassroom(int userId, String classroomName) {
         int classroomId = classroomDao.get(
                 String.format("name='%s' LIMIT 1", classroomName)).get(0).getId();
-        return userClassroomDao.insert(new UserClassroom(userId, classroomId));
+        return userClassroomDao.insert(new UserClassroom()
+                .setUserId(userId).setClassroomId(classroomId));
     }
 
 }
