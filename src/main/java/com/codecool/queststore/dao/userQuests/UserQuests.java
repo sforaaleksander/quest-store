@@ -13,7 +13,7 @@ public class UserQuests {
         return id;
     }
 
-    UserQuests setId(int id) {
+    public UserQuests setId(int id) {
         this.id = id;
         return this;
     }
@@ -22,7 +22,7 @@ public class UserQuests {
         return questId;
     }
 
-    UserQuests setQuestId(int questId) {
+    public UserQuests setQuestId(int questId) {
         this.questId = questId;
         return this;
     }
@@ -31,7 +31,7 @@ public class UserQuests {
         return userId;
     }
 
-    UserQuests setUserId(int userId) {
+    public UserQuests setUserId(int userId) {
         this.userId = userId;
         return this;
     }
@@ -40,7 +40,7 @@ public class UserQuests {
         return doneDate;
     }
 
-    UserQuests setDoneDate(Date doneDate) {
+    public UserQuests setDoneDate(Date doneDate) {
         this.doneDate = doneDate;
         return this;
     }
@@ -49,7 +49,7 @@ public class UserQuests {
         return accepted;
     }
 
-    UserQuests setAccepted(boolean accepted) {
+    public UserQuests setAccepted(boolean accepted) {
         this.accepted = accepted;
         return this;
     }
