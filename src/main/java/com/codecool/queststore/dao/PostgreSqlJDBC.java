@@ -15,10 +15,10 @@ public class PostgreSqlJDBC {
         if (connection == null) {
             try {
                 connection = DriverManager.getConnection(url, user, password); // set user and password
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
                 System.err.println(e.getClass().getName() + ": " + e.getMessage());
-                System.exit(0);
+                throw new RuntimeException("Couldn't open database");
             }
             System.out.println("Opened database successfully");
         }
