@@ -58,7 +58,7 @@ public class App {
         server.createContext("/quest-store/admin/", adminController); // todo return admin start page
 
         server.createContext("/quest-store/admin/new/classroom", adminController); // todo receive classroom to add
-        server.createContext("quest-store/admin/form/new/classroom", adminController) // todo return form to provide new classroom's data
+        server.createContext("quest-store/admin/form/new/classroom", adminController); // todo return form to provide new classroom's data
         server.createContext("/quest-store/admin/new/mentor", adminController); // todo receive mentor to add
         server.createContext("/quest-store/admin/form/new/mentor", adminController);  // todo return form to provide new mentor's data
 
