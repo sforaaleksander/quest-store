@@ -9,7 +9,7 @@ import com.codecool.queststore.dao.user.UserDao;
 
 public class UserService {
 
-    private Dao<User> userDao = new UserDao(new PostgreSqlJDBC().getConnection());
+    private Dao<User> userDao = new UserDao();
     private Dao<Role> roleDao = new RoleDao();
 
     public void addStudent(String name, String surname, String password, String email) {

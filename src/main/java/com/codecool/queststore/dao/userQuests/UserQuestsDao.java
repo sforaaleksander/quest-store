@@ -1,26 +1,21 @@
 package com.codecool.queststore.dao.userQuests;
 
 import com.codecool.queststore.dao.Dao;
+import com.codecool.queststore.dao.PostgreSqlJDBC;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserQuestsDao implements Dao<UserQuests> {
-    private final Connection c;
-
-    public UserQuestsDao(Connection connection) {
-        c = connection;
-    }
+public class UserQuestsDao extends PostgreSqlJDBC implements Dao<UserQuests> {
 
     @Override
     public List<UserQuests> get(String condition) {
         String query = String.format("SELECT * FROM user_quests WHERE %s;", condition);
         List<UserQuests> userQuests = new ArrayList<>();
-        try (PreparedStatement stmt = c.prepareStatement(query)
+        try (PreparedStatement stmt = getConnection().prepareStatement(query)
         ) {
             ResultSet results = stmt.executeQuery();
             fillList(results, userQuests);
@@ -50,7 +45,7 @@ public class UserQuestsDao implements Dao<UserQuests> {
     @Override
     public boolean insert(UserQuests userQuests) {
         try {
-            PreparedStatement stmt = c.prepareStatement(
+            PreparedStatement stmt = getConnection().prepareStatement(
                     "INSERT INTO user_quests (quest_id, user_id, done_date, accepted)" +
                             " VALUES (?, ?, ?, ?);");
             stmt.setInt(1, userQuests.getQuestId());
@@ -65,9 +60,9 @@ public class UserQuestsDao implements Dao<UserQuests> {
     }
 
     @Override
-    public boolean update(UserQuests userQuests, UserQuests ignored) {
+    public boolean update(UserQuests userQuests) {
         try {
-            PreparedStatement stmt = c.prepareStatement(
+            PreparedStatement stmt = getConnection().prepareStatement(
                     "UPDATE user_quests SET quest_id = ?, user_id = ?, done_date = ?, accepted = ? WHERE id = ?;");
             stmt.setInt(1, userQuests.getQuestId());
             stmt.setInt(2, userQuests.getUserId());
@@ -84,7 +79,7 @@ public class UserQuestsDao implements Dao<UserQuests> {
     @Override
     public boolean delete(UserQuests userQuest) {
         try {
-            PreparedStatement stmt = c.prepareStatement(
+            PreparedStatement stmt = getConnection().prepareStatement(
                     "DELETE FROM user_quests WHERE id = ?;");
             stmt.setInt(1, userQuest.getId());
             stmt.executeUpdate();
