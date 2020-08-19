@@ -8,34 +8,40 @@ import com.codecool.queststore.dao.user.UserDao;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class LoginService {
+    private final int sessionDurationMinutes = 1;
     private Dao<Session> sessionDao = new SessionDao();
     private Dao<User> userDao = new UserDao();
 
     public Optional<String> login(User user) {
-        final int sessionDurationMinutes = 1;
-        String sessionId = null;
-        boolean passwordMatches = false;
-
-        String email = user.getEmail();
-        String password = user.getPassword();
-        User loggedUser = userDao.get(String.format("email = %s", email)).get(0);
-
-        if (loggedUser.getPassword().equals(password)) {
-            passwordMatches = true;
+        if (!isUserAndPasswordValid(user)) {
+            return Optional.empty();
         }
 
-        sessionId = getRandomString();
+        String sessionId = getRandomString();
         var logInDate = Timestamp.valueOf(LocalDateTime.now());
         var expirationDate = Timestamp.valueOf(LocalDateTime.now().plusMinutes(sessionDurationMinutes));
         boolean active = true;
 
-        sessionDao.insert(new Session(sessionId, loggedUser.getId(), logInDate, expirationDate, active));
+        sessionDao.insert(new Session(sessionId, user.getId(), logInDate, expirationDate, active));
 
-        return Optional.ofNullable(sessionId);
+        return Optional.of(sessionId);
+    }
+
+    private boolean isUserAndPasswordValid(User user) {
+        String email = user.getEmail();
+        String password = user.getPassword();
+
+        var users = userDao.get(String.format("email = %s", email));
+        if (users.isEmpty()) {
+            return false;
+        }
+
+        return password.equals(users.get(0).getPassword());
     }
 
     private String getRandomString() {
@@ -54,20 +60,38 @@ public class LoginService {
         return (char) ThreadLocalRandom.current().nextInt(start, end + 1);
     }
 
-    public void logout() {
+    public void logout(User user) {
+        List<Session> sessions = getActiveSessionsByUser(user);
+        if (sessions.isEmpty()) {
+            throw new NullPointerException("Cannot logout user.");
+        }
+        var thisSession = sessions.get(0);
+        thisSession.setActive(false);
+        sessionDao.update(thisSession);
+    }
 
+    private List<Session> getActiveSessionsByUser(User user) {
+        return sessionDao.get(String.format("user_id = %d AND is_active = true", user.getId()));
     }
 
     public void logoutNonActiveUsers() {
-
+        var sessions = sessionDao.get("logout_timestamp < NOW() AND is_active = true");
+        for (Session session : sessions) {
+            session.setActive(false);
+            sessionDao.update(session);
+        }
     }
 
-    public void extendLoginTime(String... data) {
-
+    public void extendLoginTime(User user) {
+        var activeSession = getActiveSessionsByUser(user).get(0);
+        activeSession.setLogoutTimestamp(Timestamp.valueOf(LocalDateTime.now().plusMinutes(sessionDurationMinutes)));
+        sessionDao.update(activeSession);
     }
 
-    public void getLoggedUserBySessionId() {
+    public User getLoggedUserBySessionId(String sessionId) {
+        var session = sessionDao.get(String.format("session_id = %s", sessionId)).get(0);
+        int userId = session.getUserId();
 
+        return userDao.get(String.format("id = %d", userId)).get(0);
     }
-
 }
