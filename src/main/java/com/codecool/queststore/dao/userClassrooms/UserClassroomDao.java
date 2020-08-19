@@ -59,15 +59,13 @@ public class UserClassroomDao extends PostgreSqlJDBC implements Dao<UserClassroo
     }
 
     @Override
-    public boolean update(UserClassroom userClassroom, UserClassroom updatedUserClassroom) {
+    public boolean update(UserClassroom userClassroom) {
         try {
-            String updateTemplate = "UPDATE user_classrooms SET user_id=? AND classroom_id=? WHERE user_id=? AND classroom_id=?;";
+            String updateTemplate = "UPDATE user_classrooms SET classroom_id=? WHERE user_id=?;";
             PreparedStatement preparedStatement = getConnection()
                     .prepareStatement(updateTemplate);
-            preparedStatement.setInt(1, updatedUserClassroom.getUserId());
-            preparedStatement.setInt(2, updatedUserClassroom.getClassroomId());
-            preparedStatement.setInt(3, userClassroom.getUserId());
-            preparedStatement.setInt(4, userClassroom.getClassroomId());
+            preparedStatement.setInt(1, userClassroom.getClassroomId());
+            preparedStatement.setInt(2, userClassroom.getUserId());
             ResultSet resultSet = preparedStatement.executeQuery();
             preparedStatement.close();
             resultSet.close();
