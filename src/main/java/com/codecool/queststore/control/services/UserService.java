@@ -23,30 +23,32 @@ public class UserService {
     private final int MENTOR_ROLE_ID = roleDao.get("name='mentor' LIMIT 1").get(0).getId();
     private final int STUDENT_ROLE_ID = roleDao.get("name='student' LIMIT 1").get(0).getId();
 
-    public boolean addStudent(String name, String surname, String password, String email) {
-        boolean isAdded = addUser(name, surname, password, email, STUDENT_ROLE_ID);
+    public boolean addStudent(User student) {
+        boolean isAdded = addUser(student, STUDENT_ROLE_ID);
         if (isAdded) {
             new BalanceDao().insert(new Balance().setUserId(userDao.get(
-                    String.format("email='%s' AND password='%s'", email, password)).get(0).getId())
+                    String.format("email='%s' AND password='%s'",
+                            student.getEmail(), student.getPassword())).get(0).getId())
                     .setAmount(0).setTotalEarned(0));
         }
         return isAdded;
     }
 
-    public boolean addMentor(String name, String surname, String password, String email) {
-        return addUser(name, surname, password, email, MENTOR_ROLE_ID);
+    public boolean addMentor(User mentor) {
+        return addUser(mentor, MENTOR_ROLE_ID);
     }
 
-    private boolean addUser(String name, String surname, String password, String email, int roleId) {
-        return userDao.insert(new User().setName(name).setSurname(surname).setPassword(password)
-                .setEmail(email).setIdRole(roleId).setActive(true));
+    private boolean addUser(User user, int roleId) {
+        return userDao.insert(new User().setName(user.getName()).setSurname(user.getSurname())
+                .setPassword(user.getPassword()).setEmail(user.getEmail())
+                .setIdRole(roleId).setActive(true));
     }
 
-    public boolean editMentorProfile(int mentorId, String name, String surname, String password,
-                                  String email, boolean isActive) {
-        User mentorToEdit = userDao.get(String.format("id=%d LIMIT 1", mentorId)).get(0);
-        mentorToEdit.setName(name).setSurname(surname).setPassword(password)
-                .setEmail(email).setActive(isActive);
+    public boolean editMentorProfile(User mentor) {
+        User mentorToEdit = userDao.get(String.format("id=%d LIMIT 1", mentor.getId())).get(0);
+        mentorToEdit.setName(mentor.getName()).setSurname(mentor.getSurname())
+                .setPassword(mentor.getPassword()).setEmail(mentor.getEmail())
+                .setActive(mentor.isActive());
         return userDao.update(mentorToEdit);
     }
 
