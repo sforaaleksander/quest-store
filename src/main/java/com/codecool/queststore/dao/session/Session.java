@@ -37,4 +37,14 @@ public class Session {
     public boolean isActive() {
         return active;
     }
+
+    public Session setActive(boolean active) {
+        this.active = active;
+        return this;
+    }
+
+    public Session setLogoutTimestamp(Timestamp logoutTimestamp) {
+        this.logoutTimestamp = logoutTimestamp;
+        return this;
+    }
 }
