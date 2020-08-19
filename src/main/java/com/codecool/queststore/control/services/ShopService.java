@@ -40,10 +40,6 @@ public class ShopService {
         return questDao.update(questToEdit);
     }
 
-    public boolean addCategory(String categoryName) {
-        return categoryDao.insert(new Category().setName(categoryName));
-    }
-
     public boolean changeItemCategory(int itemId, String categoryName) {
         int categoryId = categoryDao.get(String.format("name=%s LIMIT 1", categoryName)).get(0).getId();
         return itemDao.update(itemDao.get(String.format("id=%d LIMIT 1", itemId)).get(0).setCategoryId(categoryId));
