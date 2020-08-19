@@ -63,23 +63,18 @@ public class ItemDao extends PostgreSqlJDBC implements Dao<Item> {
     }
 
     @Override
-    public boolean update(Item oldItem, Item updatedItem) {
+    public boolean update(Item item) {
         try {
             String updateTemplate = "UPDATE items " +
                     "SET name=?, description=?, cost=?, category_id=? " +
-                    "WHERE id=? AND name=? AND description=? AND cost=? AND category_id=?;";
+                    "WHERE id=?;";
 
             PreparedStatement preparedStatement = getConnection().prepareStatement(updateTemplate);
-            preparedStatement.setString(1,updatedItem.getName());
-            preparedStatement.setString(2, updatedItem.getDescription());
-            preparedStatement.setInt(3, updatedItem.getCost());
-            preparedStatement.setInt(4, updatedItem.getCategoryId());
-
-            preparedStatement.setInt(5, oldItem.getId());
-            preparedStatement.setString(6, oldItem.getName());
-            preparedStatement.setString(7, oldItem.getDescription());
-            preparedStatement.setInt(8, oldItem.getCost());
-            preparedStatement.setInt(9, oldItem.getCategoryId());
+            preparedStatement.setString(1,item.getName());
+            preparedStatement.setString(2, item.getDescription());
+            preparedStatement.setInt(3, item.getCost());
+            preparedStatement.setInt(4, item.getCategoryId());
+            preparedStatement.setInt(5, item.getId());
 
             preparedStatement.executeUpdate();
             preparedStatement.close();

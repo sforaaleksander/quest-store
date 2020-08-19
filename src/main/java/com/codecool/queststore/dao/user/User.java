@@ -9,11 +9,14 @@ public class User {
     private int idRole;
     private boolean isActive;
 
+    public User() {
+    }
+
     int getId() {
         return id;
     }
 
-    User setId(int id) {
+    public User setId(int id) {
         this.id = id;
         return this;
     }
@@ -22,7 +25,7 @@ public class User {
         return name;
     }
 
-    User setName(String name) {
+    public User setName(String name) {
         this.name = name;
         return this;
     }
@@ -31,7 +34,7 @@ public class User {
         return surname;
     }
 
-    User setSurname(String surname) {
+    public User setSurname(String surname) {
         this.surname = surname;
         return this;
     }
@@ -40,7 +43,7 @@ public class User {
         return password;
     }
 
-    User setPassword(String password) {
+    public User setPassword(String password) {
         this.password = password;
         return this;
     }
@@ -49,7 +52,7 @@ public class User {
         return email;
     }
 
-    User setEmail(String email) {
+    public User setEmail(String email) {
         this.email = email;
         return this;
     }
@@ -58,7 +61,7 @@ public class User {
         return idRole;
     }
 
-    User setIdRole(int idRole) {
+    public User setIdRole(int idRole) {
         this.idRole = idRole;
         return this;
     }
@@ -67,7 +70,7 @@ public class User {
         return isActive;
     }
 
-    User setActive(boolean active) {
+    public User setActive(boolean active) {
         isActive = active;
         return this;
     }
