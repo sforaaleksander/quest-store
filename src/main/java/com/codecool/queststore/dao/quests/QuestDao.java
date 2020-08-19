@@ -33,11 +33,11 @@ public class QuestDao extends PostgreSqlJDBC implements Dao<Quest> {
     private List<Quest> createQuestsFromResultSet(ResultSet resultSet) throws SQLException {
         List<Quest> quests = new ArrayList<>();
         while(resultSet.next()) {
-            quests.add(new Quest(resultSet.getInt("id"),
-                    resultSet.getString("name"),
-                    resultSet.getString("description"),
-                    resultSet.getInt("cost"),
-                    resultSet.getInt("category_id")));
+            quests.add(new Quest().setId(resultSet.getInt("id"))
+                                  .setName(resultSet.getString("name"))
+                                  .setDescription(resultSet.getString("description"))
+                                  .setCost(resultSet.getInt("cost"))
+                                  .setCategoryId(resultSet.getInt("category_id")));
         }
         return quests;
     }

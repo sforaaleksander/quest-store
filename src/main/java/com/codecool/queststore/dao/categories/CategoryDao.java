@@ -34,7 +34,7 @@ public class CategoryDao extends PostgreSqlJDBC implements Dao<Category> {
         while (resultSet.next()) {
             int id = resultSet.getInt("id");
             String name = resultSet.getString("name");
-            category = new Category(id, name);
+            category = new Category().setId(id).setName(name);
             categories.add(category);
         }
         return categories;

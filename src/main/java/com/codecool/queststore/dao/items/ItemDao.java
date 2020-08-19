@@ -33,11 +33,11 @@ public class ItemDao extends PostgreSqlJDBC implements Dao<Item> {
     private List<Item> createItemsFromResultSet(ResultSet resultSet) throws SQLException {
         List<Item> items = new ArrayList<>();
         while(resultSet.next()) {
-            items.add(new Item(resultSet.getInt("id"),
-                    resultSet.getString("name"),
-                    resultSet.getString("description"),
-                    resultSet.getInt("cost"),
-                    resultSet.getInt("category_id")));
+            items.add(new Item().setId(resultSet.getInt("id"))
+                                .setName(resultSet.getString("name"))
+                                .setDescription(resultSet.getString("description"))
+                                .setCost(resultSet.getInt("cost"))
+                                .setCategoryId(resultSet.getInt("category_id")));
         }
         return items;
     }
