@@ -1,5 +1,6 @@
 package com.codecool.queststore.control.services;
 
+import com.codecool.queststore.control.services.models.CategoryType;
 import com.codecool.queststore.dao.Dao;
 import com.codecool.queststore.dao.categories.Category;
 import com.codecool.queststore.dao.categories.CategoryDao;
@@ -13,12 +14,11 @@ public class ShopService {
     private Dao<Quest> questDao = new QuestDao();
     private Dao<Category> categoryDao = new CategoryDao();
 
-    public boolean addItem(String name, String description, int cost) {
-        return addItemOrQuest(name, description, cost, categoryDao.get("name='item' LIMIT 1").get(0).getId());
-    }
-
-    private boolean addItemOrQuest(String name, String description, int cost, int categoryId) {
-        return itemDao.insert(new Item().setName(name).setDescription(description).setCost(cost).setCategoryId(categoryId));
+    public boolean addItem(String name, String description, int cost, boolean isBasic) {
+        return itemDao.insert(new Item().setName(name).setDescription(description).setCost(cost)
+                .setCategoryId(categoryDao.get(String.format("name='%s' LIMIT 1",
+                        isBasic ? CategoryType.BASIC_ITEM.toString() :
+                        CategoryType.MAGIC_ITEM.toString())).get(0).getId()));
     }
 
     public boolean editItem(int id, String name, String description, int cost) {
@@ -27,8 +27,11 @@ public class ShopService {
         return itemDao.update(itemToEdit);
     }
 
-    public boolean addQuest(String name, String description, int cost) {
-        return addItemOrQuest(name, description, cost, categoryDao.get("name='quest' LIMIT 1").get(0).getId());
+    public boolean addQuest(String name, String description, int cost, boolean isBasic) {
+        return questDao.insert(new Quest().setName(name).setDescription(description).setCost(cost)
+                .setCategoryId(categoryDao.get(String.format("name='%s' LIMIT 1",
+                        isBasic ? CategoryType.BASIC_QUEST.toString() :
+                                CategoryType.EXTRA_QUEST.toString())).get(0).getId()));
     }
 
     public boolean editQuest(int id, String name, String description, int cost) {
