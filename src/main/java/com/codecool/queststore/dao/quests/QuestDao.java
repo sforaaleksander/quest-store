@@ -63,23 +63,18 @@ public class QuestDao extends PostgreSqlJDBC implements Dao<Quest> {
     }
 
     @Override
-    public boolean update(Quest oldQuest, Quest updatedQuest) {
+    public boolean update(Quest quest) {
         try {
             String updateTemplate = "UPDATE quests " +
                     "SET name=?, description=?, cost=?, category_id=? " +
-                    "WHERE id=? AND name=? AND description=? AND cost=? AND category_id=?;";
+                    "WHERE id=?;";
 
             PreparedStatement preparedStatement = getConnection().prepareStatement(updateTemplate);
-            preparedStatement.setString(1, updatedQuest.getName());
-            preparedStatement.setString(2, updatedQuest.getDescription());
-            preparedStatement.setInt(3, updatedQuest.getCost());
-            preparedStatement.setInt(4, updatedQuest.getCategoryId());
-
-            preparedStatement.setInt(5, oldQuest.getId());
-            preparedStatement.setString(6, oldQuest.getName());
-            preparedStatement.setString(7, oldQuest.getDescription());
-            preparedStatement.setInt(8, oldQuest.getCost());
-            preparedStatement.setInt(9, oldQuest.getCategoryId());
+            preparedStatement.setString(1, quest.getName());
+            preparedStatement.setString(2, quest.getDescription());
+            preparedStatement.setInt(3, quest.getCost());
+            preparedStatement.setInt(4, quest.getCategoryId());
+            preparedStatement.setInt(5, quest.getId());
 
             preparedStatement.executeUpdate();
             preparedStatement.close();
