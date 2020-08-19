@@ -1,6 +1,8 @@
 package com.codecool.queststore.control.services;
 
 import com.codecool.queststore.dao.Dao;
+import com.codecool.queststore.dao.balance.Balance;
+import com.codecool.queststore.dao.balance.BalanceDao;
 import com.codecool.queststore.dao.classrooms.Classroom;
 import com.codecool.queststore.dao.classrooms.ClassroomDao;
 import com.codecool.queststore.dao.roles.Role;
@@ -22,7 +24,13 @@ public class UserService {
     private final int STUDENT_ROLE_ID = roleDao.get("name='student' LIMIT 1").get(0).getId();
 
     public boolean addStudent(String name, String surname, String password, String email) {
-        return addUser(name, surname, password, email, STUDENT_ROLE_ID);
+        boolean isAdded = addUser(name, surname, password, email, STUDENT_ROLE_ID);
+        if (isAdded) {
+            new BalanceDao().insert(new Balance().setUserId(userDao.get(
+                    String.format("email='%s' AND password='%s'", email, password)).get(0).getId())
+                    .setAmount(0).setTotalEarned(0));
+        }
+        return isAdded;
     }
 
     public boolean addMentor(String name, String surname, String password, String email) {

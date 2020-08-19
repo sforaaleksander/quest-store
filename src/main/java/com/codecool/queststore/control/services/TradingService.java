@@ -1,8 +1,13 @@
 package com.codecool.queststore.control.services;
 
+import com.codecool.queststore.control.services.models.Transaction;
+import com.codecool.queststore.control.services.models.TransactionObjectType;
+import com.codecool.queststore.control.services.models.Wallet;
 import com.codecool.queststore.dao.Dao;
 import com.codecool.queststore.dao.balance.Balance;
 import com.codecool.queststore.dao.balance.BalanceDao;
+import com.codecool.queststore.dao.categories.Category;
+import com.codecool.queststore.dao.categories.CategoryDao;
 import com.codecool.queststore.dao.items.Item;
 import com.codecool.queststore.dao.items.ItemDao;
 import com.codecool.queststore.dao.quests.Quest;
@@ -14,6 +19,10 @@ import com.codecool.queststore.dao.userQuests.UserQuestsDao;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TradingService {
 
@@ -22,6 +31,7 @@ public class TradingService {
     private Dao<UserQuests> userQuestDao = new UserQuestsDao();
     private Dao<Balance> balanceDao = new BalanceDao();
     private Dao<Quest> questDao = new QuestDao();
+    private Dao<Category> categoryDao = new CategoryDao();
 
     public int getStudentCoinsAmount(int userId) {
         return balanceDao.get(String.format("user_id=?", userId)).get(0).getAmount();
@@ -56,8 +66,13 @@ public class TradingService {
         int itemCost = itemToBuy.getCost();
         int userBalance = getStudentCoinsAmount(userId);
         if (userBalance < itemCost) return false;
-        return userItemDao.insert(new UserItems().setItemId(itemToBuy.getId()).setUserId(userId)
-                .setBoughtDate(Date.valueOf(LocalDate.now())).setUsed(false));
+        boolean isAdded = balanceDao.update(new Balance().setUserId(userId)
+                .setAmount(userBalance - itemCost));
+        if (isAdded) {
+            return userItemDao.insert(new UserItems().setItemId(itemToBuy.getId()).setUserId(userId)
+                    .setBoughtDate(Date.valueOf(LocalDate.now())).setUsed(false));
+        }
+        return false;
     }
 
     private boolean makeGroupShopping() {
@@ -79,8 +94,36 @@ public class TradingService {
 
     }
 
-    public void makeStudentWallet() {
+    public Wallet makeStudentWallet(int studentId) {
+        List<Transaction> transactions = new ArrayList<>();
+        fillTransactionsWithQuests(studentId, transactions);
+        fillTransactionsWithItems(studentId, transactions);
+        List<Transaction> sortedTransactions = transactions.stream()
+                .sorted(Comparator.comparing(Transaction::getTransactionDate).reversed())
+                .collect(Collectors.toList());
+        return new Wallet(sortedTransactions);
+    }
 
+    private void fillTransactionsWithItems(int studentId, List<Transaction> transactions) {
+        userItemDao.get(String.format("user_id=%d", studentId)).stream().map(ui -> {
+            Item item = itemDao.get(String.format("item_id=%d", ui.getItemId())).get(0);
+            return new Transaction().setName(item.getName()).setDescription(item.getDescription())
+                    .setCost(item.getCost()).setCategoryName(
+                            categoryDao.get(String.format("id=%d", item.getCategoryId())).get(0).getName())
+                    .setTransactionDate(ui.getBoughtDate()).setDone(ui.isUsed())
+                    .setTransactionObjectType(TransactionObjectType.ITEM);
+        }).forEach(transactions::add);
+    }
+
+    private void fillTransactionsWithQuests(int studentId, List<Transaction> transactions) {
+        userQuestDao.get(String.format("user_id=%d", studentId)).stream().map(uq -> {
+            Quest quest = questDao.get(String.format("quest_id=%d", uq.getQuestId())).get(0);
+            return new Transaction().setName(quest.getName()).setDescription(quest.getDescription())
+                    .setCost(quest.getCost()).setCategoryName(
+                            categoryDao.get(String.format("id=%d", quest.getCategoryId())).get(0).getName())
+                    .setTransactionDate(uq.getDoneDate()).setDone(uq.isAccepted())
+                    .setTransactionObjectType(TransactionObjectType.QUEST);
+        }).forEach(transactions::add);
     }
 
 }

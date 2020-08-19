@@ -3,14 +3,14 @@ package com.codecool.queststore.control.services.models;
 import java.util.Date;
 import java.util.Optional;
 
-public abstract class Transaction {
+public class Transaction {
 
     private String name;
     private String description;
     private int cost;
     private String categoryName;
     private Date transactionDate;
-    private Optional<Date> transactionAcceptedDate;
+    private boolean isDone;
     private TransactionObjectType transactionObjectType;
 
     public String getName() {
@@ -58,12 +58,12 @@ public abstract class Transaction {
         return this;
     }
 
-    public Optional<Date> getTransactionAcceptedDate() {
-        return transactionAcceptedDate;
+    public boolean isDone() {
+        return isDone;
     }
 
-    public Transaction setTransactionAcceptedDate(Optional<Date> transactionAcceptedDate) {
-        this.transactionAcceptedDate = transactionAcceptedDate;
+    public Transaction setDone(boolean done) {
+        isDone = done;
         return this;
     }
 
