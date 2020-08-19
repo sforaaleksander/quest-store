@@ -8,13 +8,6 @@ public class Quest {
     private int cost;
     private int categoryId;
 
-//    public Quest(int id, String name, String description, int cost, int categoryId) {
-//        this.id = id;
-//        this.name = name;
-//        this.description = description;
-//        this.cost = cost;
-//        this.categoryId = categoryId;
-//    }
     public Quest(){
     }
 
@@ -62,8 +55,4 @@ public class Quest {
         this.categoryId = categoryId;
         return this;
     }
-
-//    public Quest createQuest() {
-//        return new Quest(id, name, description, cost, categoryId);
-//    }
 }
