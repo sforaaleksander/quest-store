@@ -14,29 +14,29 @@ public class ShopService {
     private Dao<Quest> questDao = new QuestDao();
     private Dao<Category> categoryDao = new CategoryDao();
 
-    public boolean addItem(String name, String description, int cost, boolean isBasic) {
-        return itemDao.insert(new Item().setName(name).setDescription(description).setCost(cost)
-                .setCategoryId(categoryDao.get(String.format("name='%s' LIMIT 1",
+    public boolean addItem(Item item, boolean isBasic) {
+        return itemDao.insert(new Item().setName(item.getName()).setDescription(item.getDescription())
+                .setCost(item.getCost()).setCategoryId(categoryDao.get(String.format("name='%s' LIMIT 1",
                         isBasic ? CategoryType.BASIC_ITEM.toString() :
                         CategoryType.MAGIC_ITEM.toString())).get(0).getId()));
     }
 
-    public boolean editItem(int id, String name, String description, int cost) {
-        Item itemToEdit = itemDao.get(String.format("id=%d LIMIT 1", id)).get(0);
-        itemToEdit.setName(name).setDescription(description).setCost(cost);
+    public boolean editItem(Item item) {
+        Item itemToEdit = itemDao.get(String.format("id=%d LIMIT 1", item.getId())).get(0);
+        itemToEdit.setName(item.getName()).setDescription(item.getDescription()).setCost(item.getCost());
         return itemDao.update(itemToEdit);
     }
 
-    public boolean addQuest(String name, String description, int cost, boolean isBasic) {
-        return questDao.insert(new Quest().setName(name).setDescription(description).setCost(cost)
-                .setCategoryId(categoryDao.get(String.format("name='%s' LIMIT 1",
+    public boolean addQuest(Quest quest, boolean isBasic) {
+        return questDao.insert(new Quest().setName(quest.getName()).setDescription(quest.getDescription())
+                .setCost(quest.getCost()).setCategoryId(categoryDao.get(String.format("name='%s' LIMIT 1",
                         isBasic ? CategoryType.BASIC_QUEST.toString() :
                                 CategoryType.EXTRA_QUEST.toString())).get(0).getId()));
     }
 
-    public boolean editQuest(int id, String name, String description, int cost) {
-        Quest questToEdit = questDao.get(String.format("id=%d LIMIT 1", id)).get(0);
-        questToEdit.setName(name).setDescription(description).setCost(cost);
+    public boolean editQuest(Quest quest) {
+        Quest questToEdit = questDao.get(String.format("id=%d LIMIT 1", quest.getId())).get(0);
+        questToEdit.setName(quest.getName()).setDescription(quest.getDescription()).setCost(quest.getCost());
         return questDao.update(questToEdit);
     }
 
