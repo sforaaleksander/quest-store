@@ -1,9 +1,9 @@
 package com.codecool.queststore;
 
-import com.codecool.queststore.user.admin.AdminController;
-import com.codecool.queststore.user.login.LoginController;
-import com.codecool.queststore.user.mentor.MentorController;
-import com.codecool.queststore.user.student.StudentController;
+import com.codecool.queststore.controllers.AdminController;
+import com.codecool.queststore.controllers.LoginController;
+import com.codecool.queststore.controllers.MentorController;
+import com.codecool.queststore.controllers.StudentController;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
