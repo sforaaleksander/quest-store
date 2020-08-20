@@ -17,7 +17,7 @@ public class StaticView {
     }
 
     public void receiveFormToProvideNewStudent(HttpExchange httpExchange) throws IOException {
-        URL fileURL = getClass().getClassLoader().getResource("./static/html/addMember.html");
+        URL fileURL = getClass().getClassLoader().getResource("static/html/addStudent.html");
         sendFile(httpExchange, fileURL);
     }
 
@@ -41,7 +41,7 @@ public class StaticView {
         sendFile(httpExchange, fileURL);
     }
 
-    private void sendFile(HttpExchange httpExchange, URL fileURL) throws IOException {
+    public void sendFile(HttpExchange httpExchange, URL fileURL) throws IOException {
 
         File file = new File(fileURL.getFile());
         String mimeType = Files.probeContentType(file.toPath());
