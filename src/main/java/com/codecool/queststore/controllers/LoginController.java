@@ -138,18 +138,15 @@ public class LoginController implements HttpHandler {
     }
 
     private void handlePost(HttpExchange httpExchange) throws IOException {
-        Optional<User> loggedUser = getUserFromCookie(httpExchange);
-        if (loggedUser.isEmpty() && context.equals("login")) {
-            Map<String, String> inputs = getInputs(httpExchange);
-            String email = inputs.get("email");
-            String password = inputs.get("password");
+        Map<String, String> inputs = getInputs(httpExchange);
+        String email = inputs.get("email");
+        String password = inputs.get("password");
 
-            Optional<String> sessionId = loginService.login(email, password);
-            if (sessionId.isPresent()) {
-                User user = loginService.getLoggedUserBySessionId(sessionId.get()).get();
-                ch.createNewCookie(httpExchange, sessionId.get());
-                redirect(httpExchange, "quest-store/" + getUsersRole(user));
-            }
+        Optional<String> sessionId = loginService.login(email, password);
+        if (sessionId.isPresent()) {
+            User user = loginService.getLoggedUserBySessionId(sessionId.get()).get();
+            ch.createNewCookie(httpExchange, sessionId.get());
+            redirect(httpExchange, "quest-store/" + getUsersRole(user));
         }
     }
 
