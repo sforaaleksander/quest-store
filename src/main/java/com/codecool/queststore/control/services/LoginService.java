@@ -54,7 +54,7 @@ public class LoginService {
 
     private char getRandomChar() {
         final int start = 48;
-        final int end = 122;
+        final int end = 91;
         return (char) ThreadLocalRandom.current().nextInt(start, end + 1);
     }
 
