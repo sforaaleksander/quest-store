@@ -19,10 +19,14 @@ import java.util.stream.Collectors;
 public class LoginController implements HttpHandler {
     private final CookieHelper ch = new CookieHelper();
     private final LoginService loginService = new LoginService();
+    private String context;
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         String method = httpExchange.getRequestMethod();
+        List<String> uriList = Arrays.stream(httpExchange.getRequestURI().getPath().split("/"))
+                .collect(Collectors.toList());
+        context = uriList.get(uriList.size() - 1);
 
         if (method.equals("GET")) {
             handleGet(httpExchange);
@@ -33,15 +37,16 @@ public class LoginController implements HttpHandler {
     }
 
     private void handleGet(HttpExchange httpExchange) throws IOException {
-        List<String> uriList = Arrays.stream(httpExchange.getRequestURI().getPath().split("/"))
-                .collect(Collectors.toList());
-        String context = uriList.get(uriList.size() - 1);
-
         Optional<User> loggedUser = getUserFromCookie(httpExchange);
+        if (context.equals("quest-store")) {
+            redirectToLogin(httpExchange);
+            return;
+        }
         if (loggedUser.isPresent() && context.equals("login")) {
             redirectToUserMain(httpExchange, loggedUser.get());
             return;
-        } if (context.equals("logout")){
+        }
+        if (context.equals("logout")){
             String sessionId = getSessionIdFromCookie(httpExchange).orElse("");
             ch.deleteCookie(httpExchange, sessionId);
             send404OrLoginPage(httpExchange);
@@ -54,6 +59,11 @@ public class LoginController implements HttpHandler {
         String userRole = UserRoleType.getById(id).toString().toLowerCase();
 
         httpExchange.getResponseHeaders().set("Location", "quest-store/" + userRole);
+        httpExchange.sendResponseHeaders(302, 0);
+    }
+
+    private void redirectToLogin(HttpExchange httpExchange) throws IOException {
+        httpExchange.getResponseHeaders().set("Location", "quest-store/login");
         httpExchange.sendResponseHeaders(302, 0);
     }
 
@@ -114,10 +124,6 @@ public class LoginController implements HttpHandler {
     }
 
     private void handlePost(HttpExchange httpExchange) throws IOException {
-        List<String> uriList = Arrays.stream(httpExchange.getRequestURI().getPath().split("/"))
-                .collect(Collectors.toList());
-        String context = uriList.get(uriList.size() - 1);
-
         Optional<User> loggedUser = getUserFromCookie(httpExchange);
         if (loggedUser.isEmpty() && context.equals("login")) {
             Map<String, String> inputs = getInputs(httpExchange);
