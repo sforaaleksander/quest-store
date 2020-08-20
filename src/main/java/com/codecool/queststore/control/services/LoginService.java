@@ -87,6 +87,7 @@ public class LoginService {
     }
 
     public Optional<User> getLoggedUserBySessionId(String sessionId) {
+        logoutNonActiveUsers();
         List<Session> sessions = sessionDao.get(
                 String.format("session_id = '%s' AND is_active=true", sessionId));
         if (sessions.isEmpty()) return Optional.empty();
