@@ -1,9 +1,6 @@
 package com.codecool.queststore;
 
-import com.codecool.queststore.controllers.AdminController;
-import com.codecool.queststore.controllers.LoginController;
-import com.codecool.queststore.controllers.MentorController;
-import com.codecool.queststore.controllers.StudentController;
+import com.codecool.queststore.controllers.*;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
@@ -12,7 +9,6 @@ import java.net.InetSocketAddress;
 public class App {
 
     public static void main(String[] args) throws IOException {
-
         LoginController loginController = new LoginController();
         MentorController mentorController = new MentorController();
         AdminController adminController = new AdminController();
@@ -22,6 +18,7 @@ public class App {
         // set routes
 
         //TODO determine appropriate paths and make controller for them
+        server.createContext("/static", new StaticController());
         server.createContext("/quest-store", loginController); //done static present TODO return form to provide login or change path if logged
         server.createContext("/quest-store/login", loginController); // TODO receive login data
         server.createContext("/quest-store/logout", loginController); // TODO logout - remove cookie set sessionID non active
