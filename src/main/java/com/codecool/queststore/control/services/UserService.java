@@ -52,6 +52,10 @@ public class UserService {
         return userDao.update(mentorToEdit);
     }
 
+    public User getStudent(int studentId) {
+        return userDao.get(String.format("id=%d AND id_role=%d LIMIT 1)", studentId, STUDENT_ROLE_ID)).get(0);
+    }
+
     public User getMentor(int mentorId) {
         return userDao.get(String.format("id=%d AND id_role=%d LIMIT 1)", mentorId, MENTOR_ROLE_ID)).get(0);
     }

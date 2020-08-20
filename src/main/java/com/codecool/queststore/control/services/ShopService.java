@@ -1,6 +1,8 @@
 package com.codecool.queststore.control.services;
 
 import com.codecool.queststore.control.services.models.CategoryType;
+import com.codecool.queststore.control.services.models.TradableObject;
+import com.codecool.queststore.control.services.models.TradableObjectType;
 import com.codecool.queststore.dao.Dao;
 import com.codecool.queststore.dao.categories.Category;
 import com.codecool.queststore.dao.categories.CategoryDao;
@@ -9,10 +11,32 @@ import com.codecool.queststore.dao.items.ItemDao;
 import com.codecool.queststore.dao.quests.Quest;
 import com.codecool.queststore.dao.quests.QuestDao;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ShopService {
     private Dao<Item> itemDao = new ItemDao();
     private Dao<Quest> questDao = new QuestDao();
     private Dao<Category> categoryDao = new CategoryDao();
+
+    public List<TradableObject> getAllQuests() {
+        return questDao.get("1=1").stream().map(quest -> {
+            String name = categoryDao.get(String.format("id='%s' LIMIT 1", quest.getId())).get(0).getName();
+            return new TradableObject().setId(quest.getId()).setName(quest.getName())
+                    .setDescription(quest.getDescription()).setCategoryName(name)
+                    .setTradableObjectType(TradableObjectType.QUEST);
+        }).collect(Collectors.toList());
+    }
+
+    public List<TradableObject> getAllItems() {
+        return itemDao.get("1=1").stream().map(item -> {
+            String name = categoryDao.get(String.format("id='%s' LIMIT 1", item.getId())).get(0).getName();
+            return new TradableObject().setId(item.getId()).setName(item.getName())
+                    .setDescription(item.getDescription()).setCategoryName(name)
+                    .setTradableObjectType(TradableObjectType.ITEM);
+        }).collect(Collectors.toList());
+    }
 
     public boolean addItem(Item item, boolean isBasic) {
         return itemDao.insert(new Item().setName(item.getName()).setDescription(item.getDescription())
