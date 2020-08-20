@@ -10,34 +10,22 @@ import java.io.OutputStream;
 import java.util.List;
 
 public class AdminView {
-    public void loadMainPageTemplateWithAdmin(HttpExchange exchange, User admin) {
+    public void loadMainPageTemplateWithAdmin(HttpExchange exchange, User admin) throws IOException {
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/admin/adminMain.twig");
         JtwigModel model = JtwigModel.newModel().with("admin", admin);
-        try {
-            renderSendGetWriteClose(template, model, exchange);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        renderSendGetWriteClose(template, model, exchange);
     }
 
-    public void loadTemplateWithAllMentors(HttpExchange exchange, List<User> mentors) {
+    public void loadTemplateWithAllMentors(HttpExchange exchange, List<User> mentors) throws IOException {
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/admin/mentorsList.twig");
         JtwigModel model = JtwigModel.newModel().with("mentors", mentors);
-        try {
-            renderSendGetWriteClose(template, model, exchange);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        renderSendGetWriteClose(template, model, exchange);
     }
 
-    public void loadTemplateWithEditMentor(HttpExchange exchange, User mentor) {
+    public void loadTemplateWithEditMentor(HttpExchange exchange, User mentor) throws IOException {
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/admin/editMentor.twig");
         JtwigModel model = JtwigModel.newModel().with("mentor", mentor);
-        try {
-            renderSendGetWriteClose(template, model, exchange);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        renderSendGetWriteClose(template, model, exchange);
     }
 
     private void renderSendGetWriteClose(JtwigTemplate template, JtwigModel model, HttpExchange exchange) throws IOException {

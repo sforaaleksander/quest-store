@@ -24,12 +24,12 @@ public class App {
         server.createContext("/quest-store/login", loginController); // TODO receive login data
         server.createContext("/quest-store/logout", loginController); // TODO logout - remove cookie set sessionID non active
 
-        server.createContext("/quest-store/student", studentController); //twig TODO return student main page (profile)
+        server.createContext("/quest-store/student", studentController); //done twig present TODO return student main page (profile)
         server.createContext("/quest-store/student/new/item", studentController); //server TODO receive item to buy
         server.createContext("/quest-store/student/new/quest", studentController); //server TODO receive quest to be done
-        server.createContext("/quest-store/student/store/items", studentController); //twig TODO return store page
-        server.createContext("/quest-store/student/store/quests", studentController); //twig TODO return all quests' page
-        server.createContext("/quest-store/student/wallet", studentController); //twig TODO return template with wallet
+        server.createContext("/quest-store/student/store/items", studentController); //done twig present TODO return store page
+        server.createContext("/quest-store/student/store/quests", studentController); //done twig present TODO return all quests' page
+        server.createContext("/quest-store/student/wallet", studentController); //done twig present TODO return template with wallet
 
         server.createContext("/quest-store/mentor", mentorController); //done twig present ?twigOrStatic todo return mentor start page
 
