@@ -33,10 +33,18 @@ public class LoginController implements HttpHandler {
     }
 
     private void handleGet(HttpExchange httpExchange) throws IOException {
+        List<String> uriList = Arrays.stream(httpExchange.getRequestURI().getPath().split("/"))
+                .collect(Collectors.toList());
+        String context = uriList.get(uriList.size() - 1);
+
         Optional<User> loggedUser = getUserFromCookie(httpExchange);
-        if (loggedUser.isPresent()) {
+        if (loggedUser.isPresent() && context.equals("login")) {
             redirectToUserMain(httpExchange, loggedUser.get());
             return;
+        } if (context.equals("logout")){
+            String sessionId = getSessionIdFromCookie(httpExchange).orElse("");
+            ch.deleteCookie(httpExchange, sessionId);
+            send404OrLoginPage(httpExchange);
         }
         send404OrLoginPage(httpExchange);
     }
@@ -122,10 +130,6 @@ public class LoginController implements HttpHandler {
                 ch.createNewCookie(httpExchange, sessionId.get());
                 redirectToUserMain(httpExchange, user);
             }
-        } else if (context.equals("logout")){
-            send404OrLoginPage(httpExchange);
-            String sessionId = getSessionIdFromCookie(httpExchange).orElse("");
-            ch.deleteCookie(httpExchange, sessionId);
         }
     }
 
