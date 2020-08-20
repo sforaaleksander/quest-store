@@ -17,8 +17,8 @@ public class LoginService {
     private Dao<Session> sessionDao = new SessionDao();
     private Dao<User> userDao = new UserDao();
 
-    public Optional<String> login(User user) {
-        if (!isUserAndPasswordValid(user)) {
+    public Optional<String> login(String email, String password) {
+        if (!isUserAndPasswordValid(email, password)) {
             return Optional.empty();
         }
 
@@ -26,16 +26,14 @@ public class LoginService {
         var logInDate = Timestamp.valueOf(LocalDateTime.now());
         var expirationDate = Timestamp.valueOf(LocalDateTime.now().plusMinutes(sessionDurationMinutes));
         boolean active = true;
+        int userId = userDao.get(String.format("email = %s", email)).get(0).getId();
 
-        sessionDao.insert(new Session(sessionId, user.getId(), logInDate, expirationDate, active));
+        sessionDao.insert(new Session(sessionId, userId, logInDate, expirationDate, active));
 
         return Optional.of(sessionId);
     }
 
-    private boolean isUserAndPasswordValid(User user) {
-        String email = user.getEmail();
-        String password = user.getPassword();
-
+    private boolean isUserAndPasswordValid(String email, String password) {
         var users = userDao.get(String.format("email = %s", email));
         if (users.isEmpty()) {
             return false;
@@ -68,6 +66,12 @@ public class LoginService {
         var thisSession = sessions.get(0);
         thisSession.setActive(false);
         sessionDao.update(thisSession);
+    }
+
+    public Session createNewSession(User user) {
+        var logInDate = Timestamp.valueOf(LocalDateTime.now());
+        var expirationDate = Timestamp.valueOf(LocalDateTime.now().plusMinutes(sessionDurationMinutes));
+        return new Session(getRandomString(), user.getId(), logInDate, expirationDate, true);
     }
 
     private List<Session> getActiveSessionsByUser(User user) {
