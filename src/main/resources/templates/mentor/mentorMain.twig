@@ -38,15 +38,15 @@
             <form>
                 <section>
                     <label for="name">Name:</label>
-                    <input id="name" value="{{ mentor.name }}">
+                    <input id="name" value="{{ mentor.getName() }}">
                 </section>
                 <section>
                     <label for="surname">Surname:</label>
-                    <input id="surname" value="{{ mentor.surname}}">
+                    <input id="surname" value="{{ mentor.getSurname() }}">
                 </section>
                 <section>
                     <label for="email">Email:</label>
-                    <input id="email" value="{{ mentor.email }}">
+                    <input id="email" value="{{ mentor.getEmail() }}">
                 </section>
                 <section>
                     <button type="button">Edit</button>
