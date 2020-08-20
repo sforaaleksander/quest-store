@@ -2,25 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Student profile</title>
-    <meta name="description" content="page containing logged student details">
+    <title>Edit mentor</title>
+    <!-- Load an icon library to show a hamburger menu (bars) on small screens -->
     <link rel="stylesheet" href="css/common-style.css">
-    <link rel="stylesheet" href="css/topnav.css">
     <link rel="stylesheet" href="css/addMember.css">
+    <link rel="stylesheet" href="css/topnav.css">
+
 </head>
 <body>
-
 <!-- Top Navigation Menu -->
 <div class="topnav">
     <a href="#home" class="active"></a>
     <!-- Navigation links (hidden by default) -->
     <div id="myLinks">
-        <a href="#profile">Show my profile</a>
-        <a href="#wallet">Show my wallet</a>
-        <a href="#store">Go to store</a>
+        <a href="#createMentorAccount">create Mentor account</a>
+        <a href="#createClass">create a class</a>
+        <a href="#editMentorsProfile">edit Mentor's profile</a>
+        <a href="#seeMentorsProfile">see Mentor's profile</a>
+        <a href="#createLevelsOfExperience">create levels of experience</a>
     </div>
     <!-- "Hamburger menu" / "Bar icon" to toggle the navigation links -->
-
     <a href="#" class="icon" id="clickme">
         <span></span>
         <span></span>
@@ -29,23 +30,19 @@
 </div>
 
 <div class="content">
-    <h1 class="editStudent">Your details:</h1>
+    <h1 class="editMentor">Mentor details:</h1>
     <form>
         <section>
             <label for="name">Name:</label>
-            <input id="name" value="Mateusz">
+            <input id="name" value="{{ mentor.name }}">
         </section>
         <section>
             <label for="surname">Surname:</label>
-            <input id="surname" value="Gołda">
+            <input id="surname" value="{{ mentor.surname}}">
         </section>
         <section>
             <label for="email">Email:</label>
-            <input id="email" value="mmateusz1993@gmail.com">
-        </section>
-        <section>
-            <label for="experience">Experience:</label>
-            <input id="experience" value="1000">
+            <input id="email" value="{{ mentor.email }}">
         </section>
         <section>
             <button type="button">Edit</button>
@@ -57,6 +54,5 @@
 </iframe>
 
 <script src="js/hamburger-menu.js"></script>
-
 </body>
 </html>
