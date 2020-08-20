@@ -33,7 +33,7 @@ public class App {
         server.createContext("/quest-store/student/store/quests", studentController); //twig TODO return all quests' page
         server.createContext("/quest-store/student/wallet", studentController); //twig TODO return template with wallet
 
-        server.createContext("/quest-store/mentor/", mentorController); //?twigOrStatic todo return mentor start page
+        server.createContext("/quest-store/mentor", mentorController); //?twigOrStatic todo return mentor start page
 
         server.createContext("/quest-store/mentor/new/student", mentorController); //server TODO receive student to add
         server.createContext("/quest-store/mentor/form/new/student", mentorController); // done static present TODO receive form to provide new student data
@@ -57,7 +57,7 @@ public class App {
 
         server.createContext("/quest-store/mentor/students/wallets", mentorController); //twig todo return template with student wallets data
 
-        server.createContext("/quest-store/admin/", adminController); //?twigOrStatic todo return admin start page
+        server.createContext("/quest-store/admin", adminController); //?twigOrStatic todo return admin start page
 
         server.createContext("/quest-store/admin/new/classroom", adminController); //server todo receive classroom to add
         server.createContext("/quest-store/admin/form/new/classroom", adminController); //done static present todo return form to provide new classroom's data
