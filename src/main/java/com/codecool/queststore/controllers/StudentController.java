@@ -5,12 +5,14 @@ import com.codecool.queststore.control.services.ShopService;
 import com.codecool.queststore.control.services.TradingService;
 import com.codecool.queststore.control.services.models.UserRoleType;
 import com.codecool.queststore.dao.user.User;
+import com.codecool.queststore.helpers.CookieHelper;
 import com.codecool.queststore.view.StudentView;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.HttpCookie;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -62,7 +64,14 @@ public class StudentController implements HttpHandler {
 
     private Optional<User> validateSession(HttpExchange exchange) throws IOException {
         loginService.logoutNonActiveUsers();
-        Optional<User> loggedUser = loginService.getLoggedUserBySessionId("");
+        Optional<HttpCookie> cookie = new CookieHelper().getSessionIdCookie(exchange);
+        if (cookie.isEmpty()) {
+            return Optional.empty();
+        }
+
+        String sessionId = cookie.get().getValue();
+        sessionId = sessionId.replace("\"", "");
+        Optional<User> loggedUser = loginService.getLoggedUserBySessionId(sessionId);
         if (loggedUser.isEmpty()) {
             redirection(exchange, "../quest-store");
             return loggedUser;
