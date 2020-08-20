@@ -45,7 +45,7 @@ public class LoginController implements HttpHandler {
             return;
         }
         if (loggedUser.isPresent() && context.equals("login")) {
-            redirect(httpExchange, "quest-store/" + getUsersRole(loggedUser.get()));
+            redirect(httpExchange, "/quest-store/" + getUsersRole(loggedUser.get()));
             return;
         }
         if (loggedUser.isEmpty() && context.equals("login")) {
@@ -73,7 +73,7 @@ public class LoginController implements HttpHandler {
     }
 
     private void redirectToLogin(HttpExchange httpExchange) throws IOException {
-        httpExchange.getResponseHeaders().set("Location", "quest-store/login");
+        httpExchange.getResponseHeaders().set("Location", "/quest-store/login");
         httpExchange.sendResponseHeaders(302, 0);
     }
 
@@ -146,7 +146,7 @@ public class LoginController implements HttpHandler {
         if (sessionId.isPresent()) {
             User user = loginService.getLoggedUserBySessionId(sessionId.get()).get();
             ch.createNewCookie(httpExchange, sessionId.get());
-            redirect(httpExchange, "quest-store/" + getUsersRole(user));
+            redirect(httpExchange, "/quest-store/" + getUsersRole(user));
         }
     }
 
