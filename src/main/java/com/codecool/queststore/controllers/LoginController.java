@@ -20,11 +20,13 @@ public class LoginController implements HttpHandler {
     private final CookieHelper ch = new CookieHelper();
     private final LoginService loginService = new LoginService();
     private String context;
+    private String requestUri;
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         String method = httpExchange.getRequestMethod();
-        List<String> uriList = Arrays.stream(httpExchange.getRequestURI().getPath().split("/"))
+        requestUri = httpExchange.getRequestURI().getPath();
+        List<String> uriList = Arrays.stream(requestUri.split("/"))
                 .collect(Collectors.toList());
         context = uriList.get(uriList.size() - 1);
 
@@ -43,22 +45,30 @@ public class LoginController implements HttpHandler {
             return;
         }
         if (loggedUser.isPresent() && context.equals("login")) {
-            redirectToUserMain(httpExchange, loggedUser.get());
+            redirect(httpExchange, "quest-store/" + getUsersRole(loggedUser.get()));
+            return;
+        }
+        if (loggedUser.isEmpty() && context.equals("login")) {
+            sendPageOr404(httpExchange);
             return;
         }
         if (context.equals("logout")){
             String sessionId = getSessionIdFromCookie(httpExchange).orElse("");
             ch.deleteCookie(httpExchange, sessionId);
-            send404OrLoginPage(httpExchange);
+            loginService.logout(loggedUser.get());
+            sendPageOr404(httpExchange);
+        } else {
+            redirect(httpExchange, "/static");
         }
-        send404OrLoginPage(httpExchange);
     }
 
-    private void redirectToUserMain(HttpExchange httpExchange, User loggedUser) throws IOException {
-        int id = loggedUser.getIdRole();
-        String userRole = UserRoleType.getById(id).toString().toLowerCase();
+    private String getUsersRole(User user) {
+        int id = user.getIdRole();
+        return UserRoleType.getById(id).toString().toLowerCase();
+    }
 
-        httpExchange.getResponseHeaders().set("Location", "quest-store/" + userRole);
+    private void redirect(HttpExchange httpExchange, String redirectionUri) throws IOException {
+        httpExchange.getResponseHeaders().set("Location", redirectionUri);
         httpExchange.sendResponseHeaders(302, 0);
     }
 
@@ -73,6 +83,7 @@ public class LoginController implements HttpHandler {
         String sessionId;
         if (cookie.isPresent()) {
             sessionId = cookie.get().getValue();
+            sessionId = sessionId.replace("\"", "");
             user = loginService.getLoggedUserBySessionId(sessionId).orElse(user);
         }
         return Optional.ofNullable(user);
@@ -87,9 +98,12 @@ public class LoginController implements HttpHandler {
         return Optional.ofNullable(sessionId);
     }
 
-    private void send404OrLoginPage(HttpExchange httpExchange) throws IOException {
+    private void sendPageOr404(HttpExchange httpExchange) throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
-        URL fileURL = classLoader.getResource("signInRegister.html");
+        URL fileURL = classLoader.getResource(requestUri);
+        if (requestUri.equals("/quest-store/login")) {
+            fileURL = classLoader.getResource("static/html/signInRegister.html");
+        }
         if (fileURL == null) {
             send404(httpExchange);
         } else {
@@ -134,7 +148,7 @@ public class LoginController implements HttpHandler {
             if (sessionId.isPresent()) {
                 User user = loginService.getLoggedUserBySessionId(sessionId.get()).get();
                 ch.createNewCookie(httpExchange, sessionId.get());
-                redirectToUserMain(httpExchange, user);
+                redirect(httpExchange, "quest-store/" + getUsersRole(user));
             }
         }
     }
