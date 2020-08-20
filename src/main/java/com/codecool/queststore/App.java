@@ -37,11 +37,15 @@ public class App {
         server.createContext("/quest-store/mentor/form/new/student", mentorController); // done static present TODO receive form to provide new student data
         server.createContext("/quest-store/mentor/new/student-classroom", mentorController); //server TODO receive class for student to assign
         server.createContext("/quest-store/mentor/form/new/student-classroom", mentorController); //done?twig present? ewentualnie strona ze sie udalo todo return form to provide data above
+        server.createContext("/quest-store/mentor/form/new/students-new-classroom", mentorController); // todo ?? above
         server.createContext("/quest-store/mentor/new/quest", mentorController); //server TODO receive quest to add
         server.createContext("/quest-store/mentor/form/new/quest", mentorController); // done static present todo return form to provide new quest's data
         server.createContext("/quest-store/mentor/new/item", mentorController); //server TODO receive item to add
         server.createContext("/quest-store/mentor/form/new/item", mentorController); //done static present todo return form to provide new item's data
 
+        server.createContext("/quest-store/mentor/store/quest", mentorController); // twig at end todo
+        server.createContext("/quest-store/mentor/form/current/quest", mentorController); // twig at end todo
+        server.createContext("/quest-store/mentor/updated/item", mentorController); // server todo
         server.createContext("/quest-store/mentor/store/item", mentorController); //twig at end todo return page with available items which can be edited
         server.createContext("/quest-store/mentor/form/current/item", mentorController); //twig at end todo return form to edit item
         server.createContext("/quest-store/mentor/updated/item", mentorController); //server todo receive data to edit item

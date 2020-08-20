@@ -73,4 +73,20 @@ public class ShopService {
         int categoryId = categoryDao.get(String.format("name=%s LIMIT 1", categoryName)).get(0).getId();
         return questDao.update(questDao.get(String.format("id=%d LIMIT 1", questId)).get(0).setCategoryId(categoryId));
     }
+
+    public TradableObject getQuest(int questId) {
+        Quest quest = questDao.get(String.format("id=%d", questId)).get(0);
+        String name = categoryDao.get(String.format("id='%s' LIMIT 1", quest.getId())).get(0).getName();
+        return new TradableObject().setId(quest.getId()).setName(quest.getName())
+                .setDescription(quest.getDescription()).setCategoryName(name)
+                .setTradableObjectType(TradableObjectType.QUEST);
+    }
+
+    public TradableObject getItem(int itemId) {
+        Item item = itemDao.get(String.format("id=%d", itemId)).get(0);
+        String name = categoryDao.get(String.format("id='%s' LIMIT 1", item.getId())).get(0).getName();
+        return new TradableObject().setId(item.getId()).setName(item.getName())
+                .setDescription(item.getDescription()).setCategoryName(name)
+                .setTradableObjectType(TradableObjectType.ITEM);
+    }
 }

@@ -64,12 +64,11 @@ public class StudentController implements HttpHandler {
         loginService.logoutNonActiveUsers();
         Optional<User> loggedUser = loginService.getLoggedUserBySessionId("");
         if (loggedUser.isEmpty()) {
-            redirection(exchange, "quest-store");
+            redirection(exchange, "/quest-store");
             return loggedUser;
         }
         loginService.extendLoginTime(loggedUser.get());
         UserRoleType userRoleType = UserRoleType.getById(loggedUser.get().getId());
-
         switch (userRoleType) {
             case ADMIN:
             case MENTOR:
