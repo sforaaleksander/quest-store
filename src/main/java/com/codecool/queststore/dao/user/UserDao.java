@@ -38,7 +38,9 @@ public class UserDao extends PostgreSqlJDBC implements Dao<User> {
                 .setName(results.getString("name"))
                 .setSurname(results.getString("surname"))
                 .setEmail(results.getString("email"))
-                .setActive(results.getBoolean("is_active"));
+                .setActive(results.getBoolean("is_active"))
+                .setPassword(results.getString("password"))
+                .setIdRole(results.getInt("id_role"));
         return user;
     }
 
