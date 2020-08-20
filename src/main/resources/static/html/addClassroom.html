@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Classroom</title>
+</head>
+<body>
+<!-- Load an icon library to show a hamburger menu (bars) on small screens -->
+<link rel="stylesheet" href="css/common-style.css">
+<link rel="stylesheet" href="css/topnav.css">
+<link rel="stylesheet" href="css/addMember.css">
+
+<!-- Top Navigation Menu -->
+<div class="topnav">
+    <a href="#home" class="active"></a>
+    <!-- Navigation links (hidden by default) -->
+    <div id="myLinks">
+        <a href="#createMentorAccount">create Mentor account</a>
+        <a href="#createClass">create a class</a>
+        <a href="#editMentorsProfile">edit Mentor's profile</a>
+        <a href="#seeMentorsProfile">see Mentor's profile</a>
+        <a href="#createLevelsOfExperience">create levels of experience</a>
+    </div>
+    <!-- "Hamburger menu" / "Bar icon" to toggle the navigation links -->
+
+    <a href="#" class="icon" id="clickme">
+        <span></span>
+        <span></span>
+        <span></span>
+    </a>
+</div>
+<div class="content">
+    <h1 class="addItem">Add classroom:</h1>
+    <form>
+        <section>
+            <label for="name">Name:</label>
+            <input id="name">
+        </section>
+        <section>
+            <button type="button">Add</button>
+        </section>
+    </form>
+</div>
+
+<iframe name="footer" src="footer.html">
+</iframe>
+
+<script src="js/hamburger-menu.js"></script>
+</body>
+</html>
