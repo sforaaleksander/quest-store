@@ -79,7 +79,6 @@ public class StudentController implements HttpHandler {
         }
         loginService.extendLoginTime(loggedUser.get());
         UserRoleType userRoleType = UserRoleType.getById(loggedUser.get().getId());
-
         switch (userRoleType) {
             case ADMIN:
             case MENTOR:

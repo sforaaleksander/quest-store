@@ -75,4 +75,11 @@ public class UserService {
                 .setUserId(userId).setClassroomId(classroomId));
     }
 
+    public List<Classroom> getAllClassrooms() {
+        return classroomDao.get("1=1");
+    }
+
+    public List<User> getAllStudents() {
+        return userDao.get(String.format("id_role=%d)", STUDENT_ROLE_ID));
+    }
 }
