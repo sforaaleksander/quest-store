@@ -34,7 +34,7 @@ public class UserClassroomDao extends PostgreSqlJDBC implements Dao<UserClassroo
         while (resultSet.next()) {
             int userId = resultSet.getInt("user_id");
             int classroomId = resultSet.getInt("classroom_id");
-            userClassroom = new UserClassroom(userId, classroomId);
+            userClassroom = new UserClassroom().setUserId(userId).setClassroomId(classroomId);
             userClassroomList.add(userClassroom);
         }
         return userClassroomList;
