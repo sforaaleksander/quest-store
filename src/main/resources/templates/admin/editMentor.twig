@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit mentor</title>
+    <!-- Load an icon library to show a hamburger menu (bars) on small screens -->
+    <link rel="stylesheet" href="css/common-style.css">
+    <link rel="stylesheet" href="css/addMember.css">
+    <link rel="stylesheet" href="css/topnav.css">
+
+</head>
+<body>
+<!-- Top Navigation Menu -->
+<div class="topnav">
+    <a href="#home" class="active"></a>
+    <!-- Navigation links (hidden by default) -->
+    <div id="myLinks">
+        <a href="#createMentorAccount">create Mentor account</a>
+        <a href="#createClass">create a class</a>
+        <a href="#editMentorsProfile">edit Mentor's profile</a>
+        <a href="#seeMentorsProfile">see Mentor's profile</a>
+        <a href="#createLevelsOfExperience">create levels of experience</a>
+    </div>
+    <!-- "Hamburger menu" / "Bar icon" to toggle the navigation links -->
+    <a href="#" class="icon" id="clickme">
+        <span></span>
+        <span></span>
+        <span></span>
+    </a>
+</div>
+
+<div class="content">
+    <h1 class="editMentor">Mentor details:</h1>
+    <form>
+        <section>
+            <label for="name">Name:</label>
+            <input id="name" value="{{ mentor.name }}">
+        </section>
+        <section>
+            <label for="surname">Surname:</label>
+            <input id="surname" value="{{ mentor.surname}}">
+        </section>
+        <section>
+            <label for="email">Email:</label>
+            <input id="email" value="{{ mentor.email }}">
+        </section>
+        <section>
+            <button type="button">Edit</button>
+        </section>
+    </form>
+</div>
+
+<iframe name="footer" src="footer.html">
+</iframe>
+
+<script src="js/hamburger-menu.js"></script>
+</body>
+</html>
