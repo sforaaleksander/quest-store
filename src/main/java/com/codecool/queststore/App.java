@@ -1,11 +1,9 @@
 package com.codecool.queststore;
 
-import com.codecool.queststore.controllers.AdminController;
-import com.codecool.queststore.controllers.LoginController;
-import com.codecool.queststore.controllers.MentorController;
-import com.codecool.queststore.controllers.StudentController;
+import com.codecool.queststore.controllers.*;
 import com.sun.net.httpserver.HttpServer;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
@@ -69,8 +67,26 @@ public class App {
 
         server.createContext("/quest-store/admin/mentors", adminController); // done twig present todo return template with all mentors
         server.createContext("/quest-store/admin/specified/mentor", adminController); //server todo return template with specified mentor
-        
+
+        // set for static files
+        loadFiles(server, new File(App.class.getClassLoader().getResource("static").getFile()), "/");
+        server.setExecutor(null); // creates a default executor
+
         // start
         server.start();
     }
+
+    private static void loadFiles(HttpServer server, File folder, String pathToFolder) {
+
+        File[] files = folder.listFiles();
+        String folderName = folder.getName();
+
+        for (File file : files) {
+            if (file.isFile()) server.createContext(
+                    pathToFolder + folderName + "/" + file.getName(), new StaticController());
+            else if (file.isDirectory()) loadFiles(server, file, pathToFolder + folderName + "/");
+        }
+
+    }
+
 }
