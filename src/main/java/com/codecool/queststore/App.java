@@ -36,13 +36,13 @@ public class App {
         server.createContext("/quest-store/mentor/", mentorController); //?twigOrStatic todo return mentor start page
 
         server.createContext("/quest-store/mentor/new/student", mentorController); //server TODO receive student to add
-        server.createContext("/quest-store/mentor/form/new/student", mentorController); //static present TODO receive form to provide new student data
+        server.createContext("/quest-store/mentor/form/new/student", mentorController); // done static present TODO receive form to provide new student data
         server.createContext("/quest-store/mentor/new/student-classroom", mentorController); //server TODO receive class for student to assign
         server.createContext("/quest-store/mentor/form/new/student-classroom", mentorController); //twig absent todo return form to provide data above
         server.createContext("/quest-store/mentor/new/quest", mentorController); //server TODO receive quest to add
-        server.createContext("/quest-store/mentor/form/new/quest", mentorController); //static absent todo return form to provide new quest's data
+        server.createContext("/quest-store/mentor/form/new/quest", mentorController); // done static present todo return form to provide new quest's data
         server.createContext("/quest-store/mentor/new/item", mentorController); //server TODO receive item to add
-        server.createContext("/quest-store/mentor/form/new/item", mentorController); //static absent todo return form to provide new item's data
+        server.createContext("/quest-store/mentor/form/new/item", mentorController); //done static present todo return form to provide new item's data
 
         server.createContext("quest-store/mentor/store/item", mentorController); //twig at end todo return page with available items which can be edited
         server.createContext("/quest-store/mentor/form/current/item", mentorController); //twig at end todo return form to edit item
@@ -60,9 +60,9 @@ public class App {
         server.createContext("/quest-store/admin/", adminController); //?twigOrStatic todo return admin start page
 
         server.createContext("/quest-store/admin/new/classroom", adminController); //server todo receive classroom to add
-        server.createContext("quest-store/admin/form/new/classroom", adminController); //static absent todo return form to provide new classroom's data
+        server.createContext("quest-store/admin/form/new/classroom", adminController); //done static present todo return form to provide new classroom's data
         server.createContext("/quest-store/admin/new/mentor", adminController); //server todo receive mentor to add
-        server.createContext("/quest-store/admin/form/new/mentor", adminController);  //static present todo return form to provide new mentor's data
+        server.createContext("/quest-store/admin/form/new/mentor", adminController);  //done static present todo return form to provide new mentor's data
 
         server.createContext("/quest-store/admin/form/current/mentor", adminController); //twig todo return form to edit mentor data
         server.createContext("/quest-store/admin/update/mentor", adminController); //server todo receive mentor to update
