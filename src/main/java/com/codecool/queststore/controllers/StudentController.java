@@ -64,7 +64,7 @@ public class StudentController implements HttpHandler {
         loginService.logoutNonActiveUsers();
         Optional<User> loggedUser = loginService.getLoggedUserBySessionId("");
         if (loggedUser.isEmpty()) {
-            redirection(exchange, "quest-store");
+            redirection(exchange, "../quest-store");
             return loggedUser;
         }
         loginService.extendLoginTime(loggedUser.get());
@@ -73,7 +73,7 @@ public class StudentController implements HttpHandler {
         switch (userRoleType) {
             case ADMIN:
             case MENTOR:
-                redirection(exchange, "/quest-store/" + userRoleType.toString().toLowerCase());
+                redirection(exchange, "../quest-store/" + userRoleType.toString().toLowerCase());
                 return Optional.empty();
         }
         return loggedUser;
