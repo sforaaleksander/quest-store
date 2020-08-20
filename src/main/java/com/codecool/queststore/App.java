@@ -83,7 +83,7 @@ public class App {
 
         for (File file : files) {
             if (file.isFile()) server.createContext(
-                    pathToFolder + folderName + "/" + file.getName(), new StaticHandler());
+                    pathToFolder + folderName + "/" + file.getName(), new StaticController());
             else if (file.isDirectory()) loadFiles(server, file, pathToFolder + folderName + "/");
         }
 
