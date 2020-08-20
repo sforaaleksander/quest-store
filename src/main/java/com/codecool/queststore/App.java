@@ -24,7 +24,7 @@ public class App {
         //TODO determine appropriate paths and make controller for them
         server.createContext("/quest-store", loginController); //done static present TODO return form to provide login or change path if logged
         server.createContext("/quest-store/login", loginController); // TODO receive login data
-        server.createContext("quest-store/logout"); // TODO logout - remove cookie set sessionID non active
+        server.createContext("/quest-store/logout", loginController); // TODO logout - remove cookie set sessionID non active
 
         server.createContext("/quest-store/student", studentController); //twig TODO return student main page (profile)
         server.createContext("/quest-store/student/new/item", studentController); //server TODO receive item to buy
@@ -33,7 +33,7 @@ public class App {
         server.createContext("/quest-store/student/store/quests", studentController); //twig TODO return all quests' page
         server.createContext("/quest-store/student/wallet", studentController); //twig TODO return template with wallet
 
-        server.createContext("/quest-store/mentor/", mentorController); //done twig present ?twigOrStatic todo return mentor start page
+        server.createContext("/quest-store/mentor", mentorController); //done twig present ?twigOrStatic todo return mentor start page
 
         server.createContext("/quest-store/mentor/new/student", mentorController); //server TODO receive student to add
         server.createContext("/quest-store/mentor/form/new/student", mentorController); // done static present TODO receive form to provide new student data
@@ -44,7 +44,7 @@ public class App {
         server.createContext("/quest-store/mentor/new/item", mentorController); //server TODO receive item to add
         server.createContext("/quest-store/mentor/form/new/item", mentorController); //done static present todo return form to provide new item's data
 
-        server.createContext("quest-store/mentor/store/item", mentorController); //twig at end todo return page with available items which can be edited
+        server.createContext("/quest-store/mentor/store/item", mentorController); //twig at end todo return page with available items which can be edited
         server.createContext("/quest-store/mentor/form/current/item", mentorController); //twig at end todo return form to edit item
         server.createContext("/quest-store/mentor/updated/item", mentorController); //server todo receive data to edit item
         // todo route which return page with split quest template (if needed)
@@ -57,10 +57,10 @@ public class App {
 
         server.createContext("/quest-store/mentor/students/wallets", mentorController); //twig todo return template with student wallets data
 
-        server.createContext("/quest-store/admin/", adminController); //done twig present ?twigOrStatic todo return admin start page
+        server.createContext("/quest-store/admin", adminController); //done twig present ?twigOrStatic todo return admin start page
 
         server.createContext("/quest-store/admin/new/classroom", adminController); //server todo receive classroom to add
-        server.createContext("quest-store/admin/form/new/classroom", adminController); //done static present todo return form to provide new classroom's data
+        server.createContext("/quest-store/admin/form/new/classroom", adminController); //done static present todo return form to provide new classroom's data
         server.createContext("/quest-store/admin/new/mentor", adminController); //server todo receive mentor to add
         server.createContext("/quest-store/admin/form/new/mentor", adminController);  //done static present todo return form to provide new mentor's data
 

@@ -1,6 +1,7 @@
 package com.codecool.queststore.view;
 
 import com.codecool.queststore.control.services.models.TradableObject;
+import com.codecool.queststore.control.services.models.Wallet;
 import com.codecool.queststore.dao.user.User;
 import com.sun.net.httpserver.HttpExchange;
 import org.jtwig.JtwigModel;
@@ -21,6 +22,10 @@ public class StudentView {
     }
 
     public void loadTemplateWithAllArtifacts(HttpExchange exchange, List<TradableObject> allItems) {
+
+    }
+
+    public void loadTemplateWithWallet(HttpExchange exchange, Wallet makeStudentWallet) {
 
     }
 }

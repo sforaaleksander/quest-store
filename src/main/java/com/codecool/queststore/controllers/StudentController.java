@@ -3,13 +3,12 @@ package com.codecool.queststore.controllers;
 import com.codecool.queststore.control.services.LoginService;
 import com.codecool.queststore.control.services.ShopService;
 import com.codecool.queststore.control.services.TradingService;
-import com.codecool.queststore.dao.quests.Quest;
+import com.codecool.queststore.control.services.models.UserRoleType;
 import com.codecool.queststore.dao.user.User;
 import com.codecool.queststore.view.StudentView;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
@@ -34,15 +33,9 @@ public class StudentController implements HttpHandler {
         //"/quest-store/student/store/quests"
         //"/quest-store/student/wallet"
 
-        // todo validate session
-        // todo check if user is student
-
-        Optional<User> loggedUser = loginService.getLoggedUserBySessionId("");
-
-        if (loggedUser.isEmpty()) {
-            sendNotFoundResponse(exchange);
-            return;
-        }
+        Optional<User> loggedUserOptional = validateSession(exchange);
+        if (loggedUserOptional.isEmpty()) return;
+        User loggedUser = loggedUserOptional.get();
 
         String method = exchange.getRequestMethod(); // "POST" or "GET"
 
@@ -52,37 +45,95 @@ public class StudentController implements HttpHandler {
         uriList.forEach(System.out::println);
 
         if (method.equals("GET")) {
-            if (uriList.size() == 3) {
-                getStartScreen(exchange);
-                return;
-            }
-            if (uriList.get(3).equals("store")) {
-                String nameOfObjectsToDisplay = uriList.get(4);
-                if (nameOfObjectsToDisplay.equals("item")) {
-                    displayAllArtifacts(exchange);
-                    return;
-                }
-                if (nameOfObjectsToDisplay.equals("quest")) {
-                    displayAllQuests(exchange);
-                    return;
-                }
-            }
+            if (displayStartScreen(exchange, loggedUser, uriList)) return;
+            if (displayStore(exchange, uriList)) return;
+            if (displayWallet(exchange, loggedUser, uriList)) return;
         }
 
         if (method.equals("POST")) {
             String nameObjectToAdd = uriList.get(4);
-            if (nameObjectToAdd.equals("item")) {
-                buyArtifact(exchange);
-                return;
-            }
-            if (nameObjectToAdd.equals("quest")) {
-                doQuest(exchange);
-                return;
-            }
+            if (addArtifactToBuy(exchange, loggedUser, nameObjectToAdd)) return;
+            if (addQuestToDo(exchange, loggedUser, nameObjectToAdd)) return;
         }
 
         sendNotFoundResponse(exchange);
 
+    }
+
+    private Optional<User> validateSession(HttpExchange exchange) throws IOException {
+        loginService.logoutNonActiveUsers();
+        Optional<User> loggedUser = loginService.getLoggedUserBySessionId("");
+        if (loggedUser.isEmpty()) {
+            redirection(exchange, "quest-store");
+            return loggedUser;
+        }
+        loginService.extendLoginTime(loggedUser.get());
+        UserRoleType userRoleType = UserRoleType.getById(loggedUser.get().getId());
+
+        switch (userRoleType) {
+            case ADMIN:
+            case MENTOR:
+                redirection(exchange, "/quest-store/" + userRoleType.toString().toLowerCase());
+                return Optional.empty();
+        }
+        return loggedUser;
+    }
+
+    private boolean addArtifactToBuy(HttpExchange exchange, User loggedUser, String nameObjectToAdd) {
+        if (nameObjectToAdd.equals("item")) {
+            buyArtifact(exchange, loggedUser);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean addQuestToDo(HttpExchange exchange, User loggedUser, String nameObjectToAdd) {
+        if (nameObjectToAdd.equals("quest")) {
+            doQuest(exchange, loggedUser);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean displayWallet(HttpExchange exchange, User loggedUser, List<String> uriList) {
+        if (uriList.get(3).equals("wallet") && uriList.size() == 4) {
+            seeWallet(exchange, loggedUser);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean displayStore(HttpExchange exchange, List<String> uriList) {
+        if (uriList.get(3).equals("store")) {
+            String nameOfObjectsToDisplay = uriList.get(4);
+            if (displayQuestStore(exchange, nameOfObjectsToDisplay)) return true;
+            return displayArtifactStore(exchange, nameOfObjectsToDisplay);
+        }
+        return false;
+    }
+
+    private boolean displayQuestStore(HttpExchange exchange, String nameOfObjectsToDisplay) {
+        if (nameOfObjectsToDisplay.equals("item")) {
+            displayAllArtifacts(exchange);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean displayArtifactStore(HttpExchange exchange, String nameOfObjectsToDisplay) {
+        if (nameOfObjectsToDisplay.equals("quest")) {
+            displayAllQuests(exchange);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean displayStartScreen(HttpExchange exchange, User loggedUser, List<String> uriList) {
+        if (uriList.get(2).equals("student") && uriList.size() == 3) {
+            getStartScreen(exchange, loggedUser);
+            return true;
+        }
+        return false;
     }
 
     private void displayAllQuests(HttpExchange exchange) {
@@ -93,26 +144,29 @@ public class StudentController implements HttpHandler {
         studentView.loadTemplateWithAllArtifacts(exchange, shopService.getAllItems());
     }
 
-    private void doQuest(HttpExchange exchange) {
+    private void doQuest(HttpExchange exchange, User user) {
         int questId = 0; // todo set parameters from exchange
-        int userId = 0;
-        tradingService.addUserQuest(questId, userId);
+        tradingService.addUserQuest(questId, user.getId());
     }
 
-    private void getStartScreen(HttpExchange exchange) {
-
-        //studentView.loadStartScreenTemplateWithUser()
+    private void getStartScreen(HttpExchange exchange, User user) {
+        studentView.loadMainPageTemplateWithStudent(exchange, user);
     }
 
-    private File seeWallet(String json) {
-        return null;
+    private void seeWallet(HttpExchange exchange, User user) {
+        studentView.loadTemplateWithWallet(exchange, tradingService.makeStudentWallet(user.getId()));
     }
 
-    private void buyArtifact(HttpExchange json) {
+    private void buyArtifact(HttpExchange exchange, User user) {
+        int artifactId = 0; // todo artifact id
+        tradingService.addUserItem(artifactId, user.getId());
     }
 
-    private File seeExperienceLevel(String json) {
-        return null;
+    // private void seeExperienceLevel(HttpExchange exchange, User user) {}
+
+    private void redirection(HttpExchange httpExchange, String path) throws IOException {
+        httpExchange.getResponseHeaders().set("Location", path);
+        httpExchange.sendResponseHeaders(302, 0);
     }
 
     private void sendNotFoundResponse(HttpExchange exchange) throws IOException {
