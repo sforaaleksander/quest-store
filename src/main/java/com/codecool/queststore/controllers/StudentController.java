@@ -4,6 +4,7 @@ import com.codecool.queststore.control.services.LoginService;
 import com.codecool.queststore.control.services.ShopService;
 import com.codecool.queststore.control.services.TradingService;
 import com.codecool.queststore.control.services.models.UserRoleType;
+import com.codecool.queststore.dao.balance.Balance;
 import com.codecool.queststore.dao.user.User;
 import com.codecool.queststore.helpers.CookieHelper;
 import com.codecool.queststore.view.StudentView;
@@ -104,7 +105,7 @@ public class StudentController implements HttpHandler {
         return false;
     }
 
-    private boolean displayWallet(HttpExchange exchange, User loggedUser, List<String> uriList) {
+    private boolean displayWallet(HttpExchange exchange, User loggedUser, List<String> uriList) throws IOException {
         if (uriList.get(3).equals("wallet") && uriList.size() == 4) {
             seeWallet(exchange, loggedUser);
             return true;
@@ -112,7 +113,7 @@ public class StudentController implements HttpHandler {
         return false;
     }
 
-    private boolean displayStore(HttpExchange exchange, List<String> uriList) {
+    private boolean displayStore(HttpExchange exchange, List<String> uriList) throws IOException {
         if (uriList.get(3).equals("store")) {
             String nameOfObjectsToDisplay = uriList.get(4);
             if (displayQuestStore(exchange, nameOfObjectsToDisplay)) return true;
@@ -121,7 +122,7 @@ public class StudentController implements HttpHandler {
         return false;
     }
 
-    private boolean displayQuestStore(HttpExchange exchange, String nameOfObjectsToDisplay) {
+    private boolean displayQuestStore(HttpExchange exchange, String nameOfObjectsToDisplay) throws IOException {
         if (nameOfObjectsToDisplay.equals("item")) {
             displayAllArtifacts(exchange);
             return true;
@@ -129,7 +130,7 @@ public class StudentController implements HttpHandler {
         return false;
     }
 
-    private boolean displayArtifactStore(HttpExchange exchange, String nameOfObjectsToDisplay) {
+    private boolean displayArtifactStore(HttpExchange exchange, String nameOfObjectsToDisplay) throws IOException {
         if (nameOfObjectsToDisplay.equals("quest")) {
             displayAllQuests(exchange);
             return true;
@@ -137,7 +138,7 @@ public class StudentController implements HttpHandler {
         return false;
     }
 
-    private boolean displayStartScreen(HttpExchange exchange, User loggedUser, List<String> uriList) {
+    private boolean displayStartScreen(HttpExchange exchange, User loggedUser, List<String> uriList) throws IOException {
         if (uriList.get(2).equals("student") && uriList.size() == 3) {
             getStartScreen(exchange, loggedUser);
             return true;
@@ -145,11 +146,11 @@ public class StudentController implements HttpHandler {
         return false;
     }
 
-    private void displayAllQuests(HttpExchange exchange) {
+    private void displayAllQuests(HttpExchange exchange) throws IOException {
         studentView.loadTemplateWithAllQuest(exchange, shopService.getAllQuests());
     }
 
-    private void displayAllArtifacts(HttpExchange exchange) {
+    private void displayAllArtifacts(HttpExchange exchange) throws IOException {
         studentView.loadTemplateWithAllArtifacts(exchange, shopService.getAllItems());
     }
 
@@ -158,12 +159,14 @@ public class StudentController implements HttpHandler {
         tradingService.addUserQuest(questId, user.getId());
     }
 
-    private void getStartScreen(HttpExchange exchange, User user) {
-        studentView.loadMainPageTemplateWithStudent(exchange, user);
+    private void getStartScreen(HttpExchange exchange, User user) throws IOException {
+        Balance balance = tradingService.getBalanceByUserId(user.getId());
+        studentView.loadMainPageTemplateWithStudent(exchange, user, balance);
     }
 
-    private void seeWallet(HttpExchange exchange, User user) {
-        studentView.loadTemplateWithWallet(exchange, tradingService.makeStudentWallet(user.getId()));
+    private void seeWallet(HttpExchange exchange, User user) throws IOException {
+        Balance balance = tradingService.getBalanceByUserId(user.getId());
+        studentView.loadTemplateWithWallet(exchange, tradingService.makeStudentWallet(user.getId()), balance);
     }
 
     private void buyArtifact(HttpExchange exchange, User user) {
