@@ -14,7 +14,7 @@ public class SessionDao extends PostgreSqlJDBC implements Dao<Session> {
         try {
             Statement statement = getConnection().createStatement();
             ResultSet resultSet = statement.executeQuery(
-                    String.format("SELECT * FROM session WHERE %s", condition));
+                    String.format("SELECT * FROM sessions WHERE %s;", condition));
             fillListFrom(resultSet, sessions);
             statement.close();
             resultSet.close();

@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class TradingService {
@@ -40,6 +41,10 @@ public class TradingService {
     public boolean addUserQuest(int questId, int userId) {
         return userQuestDao.insert(new UserQuests().setQuestId(questId).setUserId(userId)
                 .setDoneDate(Date.valueOf(LocalDate.now())).setAccepted(false));
+    }
+
+    public Balance getBalanceByUserId(int userId) {
+        return balanceDao.get("user_id = " + userId).get(0);
     }
 
     public boolean acceptUserQuest(int userQuestId) {
