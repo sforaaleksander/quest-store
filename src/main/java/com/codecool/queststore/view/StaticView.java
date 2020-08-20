@@ -16,6 +16,31 @@ public class StaticView {
         sendFile(httpExchange, fileURL);
     }
 
+    public void receiveFormToProvideNewStudent(HttpExchange httpExchange) throws IOException {
+        URL fileURL = getClass().getClassLoader().getResource("./static/html/addMember.html");
+        sendFile(httpExchange, fileURL);
+    }
+
+    public void receiveFormToProvideNewQuest(HttpExchange httpExchange) throws IOException {
+        URL fileURL = getClass().getClassLoader().getResource("./static/html/addQuest.html");
+        sendFile(httpExchange, fileURL);
+    }
+
+    public void receiveFormToProvideNewItem(HttpExchange httpExchange) throws IOException {
+        URL fileURL = getClass().getClassLoader().getResource("./static/html/addItem.html");
+        sendFile(httpExchange, fileURL);
+    }
+
+    public void receiveFormToProvideNewClassroom(HttpExchange httpExchange) throws IOException {
+        URL fileURL = getClass().getClassLoader().getResource("./static/html/addClassroom.html");
+        sendFile(httpExchange, fileURL);
+    }
+
+    public void receiveFormToProvideNewMentor(HttpExchange httpExchange) throws IOException {
+        URL fileURL = getClass().getClassLoader().getResource("./static/html/addMentor.html");
+        sendFile(httpExchange, fileURL);
+    }
+
     private void sendFile(HttpExchange httpExchange, URL fileURL) throws IOException {
 
         File file = new File(fileURL.getFile());
