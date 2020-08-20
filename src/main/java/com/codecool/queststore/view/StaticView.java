@@ -41,7 +41,7 @@ public class StaticView {
         sendFile(httpExchange, fileURL);
     }
 
-    private void sendFile(HttpExchange httpExchange, URL fileURL) throws IOException {
+    public void sendFile(HttpExchange httpExchange, URL fileURL) throws IOException {
 
         File file = new File(fileURL.getFile());
         String mimeType = Files.probeContentType(file.toPath());
