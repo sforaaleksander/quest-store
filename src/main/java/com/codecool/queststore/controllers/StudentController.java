@@ -10,6 +10,8 @@ import com.codecool.queststore.helpers.CookieHelper;
 import com.codecool.queststore.view.StudentView;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.jtwig.JtwigModel;
+import org.jtwig.JtwigTemplate;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -74,7 +76,7 @@ public class StudentController implements HttpHandler {
         sessionId = sessionId.replace("\"", "");
         Optional<User> loggedUser = loginService.getLoggedUserBySessionId(sessionId);
         if (loggedUser.isEmpty()) {
-            redirection(exchange, "../quest-store");
+            redirection(exchange, "../login");
             return loggedUser;
         }
         loginService.extendLoginTime(loggedUser.get());
@@ -83,7 +85,7 @@ public class StudentController implements HttpHandler {
         switch (userRoleType) {
             case ADMIN:
             case MENTOR:
-                redirection(exchange, "../quest-store/" + userRoleType.toString().toLowerCase());
+                redirection(exchange, "../" + userRoleType.toString().toLowerCase());
                 return Optional.empty();
         }
         return loggedUser;
@@ -106,7 +108,7 @@ public class StudentController implements HttpHandler {
     }
 
     private boolean displayWallet(HttpExchange exchange, User loggedUser, List<String> uriList) throws IOException {
-        if (uriList.get(3).equals("wallet") && uriList.size() == 4) {
+        if (uriList.get(2).equals("wallet") && uriList.size() == 3) {
             seeWallet(exchange, loggedUser);
             return true;
         }
@@ -114,7 +116,7 @@ public class StudentController implements HttpHandler {
     }
 
     private boolean displayStore(HttpExchange exchange, List<String> uriList) throws IOException {
-        if (uriList.get(3).equals("store")) {
+        if (uriList.get(2).equals("store")) {
             String nameOfObjectsToDisplay = uriList.get(4);
             if (displayQuestStore(exchange, nameOfObjectsToDisplay)) return true;
             return displayArtifactStore(exchange, nameOfObjectsToDisplay);
@@ -139,7 +141,7 @@ public class StudentController implements HttpHandler {
     }
 
     private boolean displayStartScreen(HttpExchange exchange, User loggedUser, List<String> uriList) throws IOException {
-        if (uriList.get(2).equals("student") && uriList.size() == 3) {
+        if (uriList.get(1).equals("student") && uriList.size() == 2) {
             getStartScreen(exchange, loggedUser);
             return true;
         }

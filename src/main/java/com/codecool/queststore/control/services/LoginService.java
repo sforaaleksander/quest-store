@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class LoginService {
-    private final int sessionDurationMinutes = 1;
+    private final int sessionDurationMinutes = 10;
     private Dao<Session> sessionDao = new SessionDao();
     private Dao<User> userDao = new UserDao();
 

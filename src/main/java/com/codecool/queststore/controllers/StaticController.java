@@ -19,8 +19,8 @@ public class StaticController implements HttpHandler {
         System.out.printf("Looking for %s\n", uri.getPath());
         String path = "./" + uri.getPath();
 
+        System.out.println("path: " + path);
         URL fileURL = getClass().getClassLoader().getResource(path);
         staticView.sendFile(httpExchange, fileURL);
-
     }
 }

@@ -40,12 +40,12 @@ public class LoginController implements HttpHandler {
 
     private void handleGet(HttpExchange httpExchange) throws IOException {
         Optional<User> loggedUser = getUserFromCookie(httpExchange);
-        if (context.equals("quest-store")) {
+        if (context.equals("")) {
             redirectToLogin(httpExchange);
             return;
         }
         if (loggedUser.isPresent() && context.equals("login")) {
-            redirect(httpExchange, "/quest-store/" + getUsersRole(loggedUser.get()));
+            redirect(httpExchange, "/" + getUsersRole(loggedUser.get()));
             return;
         }
         if (loggedUser.isEmpty() && context.equals("login")) {
@@ -56,10 +56,10 @@ public class LoginController implements HttpHandler {
             String sessionId = getSessionIdFromCookie(httpExchange).orElse("");
             ch.deleteCookie(httpExchange, sessionId);
             loginService.logout(loggedUser.get());
-            sendPageOr404(httpExchange);
-        } else {
-            redirect(httpExchange, "/static");
-        }
+            redirect(httpExchange, "/login");
+        } //else {
+//            redirect(httpExchange, "/static");
+//        }
     }
 
     private String getUsersRole(User user) {
@@ -73,7 +73,7 @@ public class LoginController implements HttpHandler {
     }
 
     private void redirectToLogin(HttpExchange httpExchange) throws IOException {
-        httpExchange.getResponseHeaders().set("Location", "/quest-store/login");
+        httpExchange.getResponseHeaders().set("Location", "/login");
         httpExchange.sendResponseHeaders(302, 0);
     }
 
@@ -101,7 +101,7 @@ public class LoginController implements HttpHandler {
     private void sendPageOr404(HttpExchange httpExchange) throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
         URL fileURL = classLoader.getResource(requestUri);
-        if (requestUri.equals("/quest-store/login")) {
+        if (requestUri.equals("/login")) {
             fileURL = classLoader.getResource("static/html/signInRegister.html");
         }
         if (fileURL == null) {
@@ -146,7 +146,7 @@ public class LoginController implements HttpHandler {
         if (sessionId.isPresent()) {
             User user = loginService.getLoggedUserBySessionId(sessionId.get()).get();
             ch.createNewCookie(httpExchange, sessionId.get());
-            redirect(httpExchange, "/quest-store/" + getUsersRole(user));
+            redirect(httpExchange, "/" + getUsersRole(user));
         }
     }
 
