@@ -1,5 +1,6 @@
 package com.codecool.queststore.view;
 
+import com.codecool.queststore.control.services.models.TradableObject;
 import com.codecool.queststore.dao.classrooms.Classroom;
 import com.codecool.queststore.dao.user.User;
 import com.sun.net.httpserver.HttpExchange;
@@ -37,5 +38,21 @@ public class MentorView {
         OutputStream os = exchange.getResponseBody();
         os.write(response.getBytes());
         os.close();
+    }
+
+    public void loadCurrentQuestToEdit(TradableObject quest) {
+
+    }
+
+    public void loadCurrentItemToEdit(TradableObject item) {
+
+    }
+
+    public void displayAllQuestsWhichAreAbleToEdit(HttpExchange exchange, List<TradableObject> allQuests) {
+
+    }
+
+    public void displayAllItemsWhichAreAbleToEdit(HttpExchange exchange, List<TradableObject> allItems) {
+
     }
 }

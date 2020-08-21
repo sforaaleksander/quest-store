@@ -133,4 +133,6 @@ public class TradingService {
         }).forEach(transactions::add);
     }
 
+    public List<Transaction> getAllItemsTransactions() { return null; }
+
 }
