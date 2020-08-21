@@ -111,7 +111,7 @@ public class TradingService {
 
     private void fillTransactionsWithItems(int studentId, List<Transaction> transactions) {
         userItemDao.get(String.format("user_id=%d", studentId)).stream().map(ui -> {
-            Item item = itemDao.get(String.format("item_id=%d", ui.getItemId())).get(0);
+            Item item = itemDao.get(String.format("id=%d", ui.getItemId())).get(0);
             return new Transaction().setName(item.getName()).setDescription(item.getDescription())
                     .setCost(item.getCost()).setCategoryName(
                             categoryDao.get(String.format("id=%d", item.getCategoryId())).get(0).getName())
@@ -122,8 +122,10 @@ public class TradingService {
 
     private void fillTransactionsWithQuests(int studentId, List<Transaction> transactions) {
         userQuestDao.get(String.format("user_id=%d", studentId)).stream().map(uq -> {
-            Quest quest = questDao.get(String.format("quest_id=%d", uq.getQuestId())).get(0);
-            return new Transaction().setName(quest.getName()).setDescription(quest.getDescription())
+            Quest quest = questDao.get(String.format("id=%d", uq.getQuestId())).get(0);
+            return new Transaction()
+                    .setName(quest.getName())
+                    .setDescription(quest.getDescription())
                     .setCost(quest.getCost()).setCategoryName(
                             categoryDao.get(String.format("id=%d", quest.getCategoryId())).get(0).getName())
                     .setTransactionDate(uq.getDoneDate()).setDone(uq.isAccepted())

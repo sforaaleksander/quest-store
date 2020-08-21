@@ -20,7 +20,7 @@ public class StudentView {
 
     public void loadMainPageTemplateWithStudent(HttpExchange exchange, User student, Balance balance) throws IOException {
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/student/studentMain.twig");
-        JtwigModel model = JtwigModel.newModel().with("student", student).with("balance", balance);
+        JtwigModel model = JtwigModel.newModel().with("user", student);
         renderSendGetWriteClose(template, model, exchange);
     }
 
@@ -44,7 +44,7 @@ public class StudentView {
 
     public void loadTemplateWithWallet(HttpExchange exchange, Wallet makeStudentWallet, Balance balance) throws IOException {
         List<Transaction> transactions = makeStudentWallet.getTransactions();
-        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/studentMain.twig");
+        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/student/studentWallet.twig");
         JtwigModel model = JtwigModel.newModel().with("transactions", transactions)
                                                 .with("balance", balance);
         renderSendGetWriteClose(template, model, exchange);

@@ -36,7 +36,7 @@ public class QuestDao extends PostgreSqlJDBC implements Dao<Quest> {
             quests.add(new Quest().setId(resultSet.getInt("id"))
                                   .setName(resultSet.getString("name"))
                                   .setDescription(resultSet.getString("description"))
-                                  .setCost(resultSet.getInt("cost"))
+                                  .setCost(resultSet.getInt("money"))
                                   .setCategoryId(resultSet.getInt("category_id")));
         }
         return quests;
