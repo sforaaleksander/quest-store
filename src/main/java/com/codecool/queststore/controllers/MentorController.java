@@ -79,13 +79,13 @@ public class MentorController implements HttpHandler {
             switch (uriList.get(3)) {
                 case "new":
                     receiveNewForm(exchange, uriList);
-                    return;
+                    break;
                 case "updated":
                     receiveUpdatedForm(exchange, uriList);
-                    return;
+                    break;
                 case "not-marked":
                     markReceivedObject(exchange, uriList);
-                    return;
+                    break;
             }
             redirection(exchange, "/quest-store/mentor");
         }
