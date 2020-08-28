@@ -1,7 +1,8 @@
 package com.codecool.queststore.control.services.models;
 
+import com.codecool.queststore.dao.user.User;
+
 import java.util.Date;
-import java.util.Optional;
 
 public class Transaction {
 
@@ -12,6 +13,7 @@ public class Transaction {
     private Date transactionDate;
     private boolean isDone;
     private TransactionObjectType transactionObjectType;
+    private User owner;
 
     public String getName() {
         return name;
@@ -73,6 +75,15 @@ public class Transaction {
 
     public Transaction setTransactionObjectType(TransactionObjectType transactionObjectType) {
         this.transactionObjectType = transactionObjectType;
+        return this;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public Transaction setOwner(User owner) {
+        this.owner = owner;
         return this;
     }
 }
