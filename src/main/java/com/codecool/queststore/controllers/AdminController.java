@@ -88,13 +88,13 @@ public class AdminController implements HttpHandler {
         }
     }
 
-    private void displayTemplates(HttpExchange exchange, List<String> uriList) {
+    private void displayTemplates(HttpExchange exchange, List<String> uriList) throws IOException {
         if (uriList.get(4).equals("mentors")) {
             displayAllMentors(exchange);
         }
     }
 
-    private void displayForms(HttpExchange exchange, List<String> uriList) {
+    private void displayForms(HttpExchange exchange, List<String> uriList) throws IOException {
         if (uriList.get(4).equals("new")) {
             switch (uriList.get(5)) {
                 case "classroom":
@@ -112,7 +112,7 @@ public class AdminController implements HttpHandler {
         }
     }
 
-    private void displayAdminMainPage(HttpExchange exchange, User loggedUser) {
+    private void displayAdminMainPage(HttpExchange exchange, User loggedUser) throws IOException {
         adminView.loadMainPageTemplateWithAdmin(exchange, loggedUser);
     }
 
@@ -159,13 +159,13 @@ public class AdminController implements HttpHandler {
         adminView.displayNewMentorForm(exchange);
     }
 
-    private void displayCurrentMentorFormToEdit(HttpExchange exchange) {
+    private void displayCurrentMentorFormToEdit(HttpExchange exchange) throws IOException {
         int mentorId = 0; // todo get mentor id from exchange
         User mentorToDisplay = userService.getMentor(mentorId);
         adminView.loadTemplateWithEditMentor(exchange, mentorToDisplay);
     }
 
-    private void displayAllMentors(HttpExchange exchange) {
+    private void displayAllMentors(HttpExchange exchange) throws IOException {
         adminView.loadTemplateWithAllMentors(exchange, userService.getAllMentors());
     }
 
