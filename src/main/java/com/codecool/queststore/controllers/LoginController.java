@@ -10,14 +10,11 @@ import com.sun.net.httpserver.HttpHandler;
 import java.io.*;
 import java.net.HttpCookie;
 import java.net.URL;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class LoginController implements HttpHandler {
-    private final CookieHelper ch = new CookieHelper();
+public class LoginController extends Controller implements HttpHandler {
     private final LoginService loginService = new LoginService();
     private String context;
     private String requestUri;
@@ -28,7 +25,7 @@ public class LoginController implements HttpHandler {
         requestUri = httpExchange.getRequestURI().getPath();
         List<String> uriList = Arrays.stream(requestUri.split("/"))
                 .collect(Collectors.toList());
-        context = uriList.get(uriList.size() - 1);
+        context = uriList.size() > 0 ? uriList.get(uriList.size() - 1) : "";
 
         if (method.equals("GET")) {
             handleGet(httpExchange);
@@ -38,7 +35,7 @@ public class LoginController implements HttpHandler {
         }
     }
 
-    private void handleGet(HttpExchange httpExchange) throws IOException {
+    void handleGet(HttpExchange httpExchange) throws IOException {
         Optional<User> loggedUser = getUserFromCookie(httpExchange);
         if (context.equals("")) {
             redirectToLogin(httpExchange);
@@ -50,16 +47,7 @@ public class LoginController implements HttpHandler {
         }
         if (loggedUser.isEmpty() && context.equals("login")) {
             sendPageOr404(httpExchange);
-            return;
         }
-        if (context.equals("logout")){
-            String sessionId = getSessionIdFromCookie(httpExchange).orElse("");
-            ch.deleteCookie(httpExchange, sessionId);
-            loginService.logout(loggedUser.get());
-            redirect(httpExchange, "/login");
-        } //else {
-//            redirect(httpExchange, "/static");
-//        }
     }
 
     private String getUsersRole(User user) {
@@ -79,7 +67,7 @@ public class LoginController implements HttpHandler {
 
     private Optional<User> getUserFromCookie(HttpExchange httpExchange) {
         User user = null;
-        Optional<HttpCookie> cookie = ch.getSessionIdCookie(httpExchange);
+        Optional<HttpCookie> cookie = CookieHelper.getSessionIdCookie(httpExchange);
         String sessionId;
         if (cookie.isPresent()) {
             sessionId = cookie.get().getValue();
@@ -87,15 +75,6 @@ public class LoginController implements HttpHandler {
             user = loginService.getLoggedUserBySessionId(sessionId).orElse(user);
         }
         return Optional.ofNullable(user);
-    }
-
-    private Optional<String> getSessionIdFromCookie(HttpExchange httpExchange) {
-        Optional<HttpCookie> cookie = ch.getSessionIdCookie(httpExchange);
-        String sessionId = null;
-        if (cookie.isPresent()) {
-            sessionId = cookie.get().getValue();
-        }
-        return Optional.ofNullable(sessionId);
     }
 
     private void sendPageOr404(HttpExchange httpExchange) throws IOException {
@@ -137,7 +116,7 @@ public class LoginController implements HttpHandler {
         os.close();
     }
 
-    private void handlePost(HttpExchange httpExchange) throws IOException {
+    void handlePost(HttpExchange httpExchange) throws IOException {
         Map<String, String> inputs = getInputs(httpExchange);
         String email = inputs.get("email");
         String password = inputs.get("password");
@@ -145,28 +124,8 @@ public class LoginController implements HttpHandler {
         Optional<String> sessionId = loginService.login(email, password);
         if (sessionId.isPresent()) {
             User user = loginService.getLoggedUserBySessionId(sessionId.get()).get();
-            ch.createNewCookie(httpExchange, sessionId.get());
+            CookieHelper.createNewCookie(httpExchange, sessionId.get());
             redirect(httpExchange, "/" + getUsersRole(user));
         }
-    }
-
-    private Map<String, String> getInputs(HttpExchange httpExchange) throws IOException {
-        InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), StandardCharsets.UTF_8);
-        BufferedReader br = new BufferedReader(isr);
-        String formData = br.readLine();
-
-        System.out.println(formData);
-        return parseFormData(formData);
-    }
-
-    private static Map<String, String> parseFormData(String formData) {
-        Map<String, String> map = new HashMap<>();
-        String[] pairs = formData.split("&");
-        for (String pair : pairs) {
-            String[] keyValue = pair.split("=");
-            String value = URLDecoder.decode(keyValue[1], StandardCharsets.UTF_8);
-            map.put(keyValue[0], value);
-        }
-        return map;
     }
 }
