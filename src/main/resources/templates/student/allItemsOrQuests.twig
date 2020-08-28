@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Items or Quests</title>
+    <meta name="description" content="page containing logged student details">
+    <link rel="stylesheet" href="css/common-style.css">
+    <link rel="stylesheet" href="css/topnav.css">
+    <link rel="stylesheet" href="css/listOfThings.css">
+
+</head>
+<body>
+<div class="topnav">
+    <a href="#home" class="active"></a>
+    <!-- Navigation links (hidden by default) -->
+    <div id="myLinks">
+        <a href="#profile">Show my profile</a>
+        <a href="#wallet">Show my wallet</a>
+        <a href="#store">Go to store</a>
+    </div>
+    <a href="#" class="icon" id="clickme">
+        <span></span>
+        <span></span>
+        <span></span>
+    </a>
+</div>
+<div class="content">
+    <section>
+        <h1 class="items">{{ questsOrItems.get(0).getTradableObjectType().name() }}</h1>
+    </section>
+    <section>
+        <table>
+            <thead>
+            <tr>
+                <th>Name:</th>
+                <th>Cost:</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for itemOrQuest in questsOrItems %}
+            <tr>
+                <td>{{ itemOrQuest.getName() }}</td>
+                <td>{{ itemOrQuest.getCost() }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    <section class="loader">
+        <!--        <p>Amount: XX/123</p>-->
+        <button type="button">Load more</button>
+    </section>
+    <section class="top">
+        <button type="button" class="top">Go Top</button>
+    </section>
+</div>
+
+<iframe name="footer" src="footer.html">
+</iframe>
+
+<script src="js/hamburger-menu.js"></script>
+</body>
+</html>
