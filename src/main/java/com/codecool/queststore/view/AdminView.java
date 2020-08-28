@@ -35,4 +35,11 @@ public class AdminView {
         os.write(response.getBytes());
         os.close();
     }
+
+    public void loadNewClassroomForm(HttpExchange exchange) {
+        
+    }
+
+    public void displayNewMentorForm(HttpExchange exchange) {
+    }
 }

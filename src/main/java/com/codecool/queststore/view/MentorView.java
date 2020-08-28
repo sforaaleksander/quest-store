@@ -1,6 +1,7 @@
 package com.codecool.queststore.view;
 
 import com.codecool.queststore.control.services.models.TradableObject;
+import com.codecool.queststore.control.services.models.Transaction;
 import com.codecool.queststore.dao.classrooms.Classroom;
 import com.codecool.queststore.dao.user.User;
 import com.sun.net.httpserver.HttpExchange;
@@ -40,11 +41,11 @@ public class MentorView {
         os.close();
     }
 
-    public void loadCurrentQuestToEdit(TradableObject quest) {
+    public void loadCurrentQuestToEdit(HttpExchange exchange, TradableObject quest) {
 
     }
 
-    public void loadCurrentItemToEdit(TradableObject item) {
+    public void loadCurrentItemToEdit(HttpExchange exchange, TradableObject item) {
 
     }
 
@@ -53,6 +54,14 @@ public class MentorView {
     }
 
     public void displayAllItemsWhichAreAbleToEdit(HttpExchange exchange, List<TradableObject> allItems) {
+
+    }
+
+    public void displayAllNotMarkedItems(HttpExchange exchange, List<Transaction> allNotMarkedItems) {
+
+    }
+
+    public void displayAllNotMarkedQuests(HttpExchange exchange, List<Transaction> allNotMarkedQuests) {
 
     }
 }
