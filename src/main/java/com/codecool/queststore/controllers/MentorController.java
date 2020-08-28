@@ -209,7 +209,7 @@ public class MentorController implements HttpHandler {
         UserRoleType userRoleType = UserRoleType.getById(loggedUser.get().getId());
         switch (userRoleType) {
             case STUDENT:
-            case MENTOR:
+            case ADMIN:
                 redirection(exchange, "/quest-store/" + userRoleType.toString().toLowerCase());
                 return Optional.empty();
         }
