@@ -4,7 +4,6 @@ import com.codecool.queststore.control.services.LoginService;
 import com.codecool.queststore.control.services.ShopService;
 import com.codecool.queststore.control.services.TradingService;
 import com.codecool.queststore.control.services.UserService;
-import com.codecool.queststore.control.services.models.TradableObject;
 import com.codecool.queststore.control.services.models.UserRoleType;
 import com.codecool.queststore.dao.user.User;
 import com.codecool.queststore.view.MentorView;
@@ -12,13 +11,11 @@ import com.codecool.queststore.view.StaticView;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class MentorController implements HttpHandler {
 
@@ -31,32 +28,29 @@ public class MentorController implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        //"/quest-store/mentor";                                GET
-        //"/quest-store/mentor/new/student";                    POST
-        //"/quest-store/mentor/form/new/student";               GET
+        // path added "/quest-store/mentor/form/new/student";               GET
+        // path added "/quest-store/mentor/form/new/student-classroom";     GET
+        // path added "/quest-store/mentor/form/new/students-new-classroom" GET
+        // path added "/quest-store/mentor/form/new/quest";                 GET
+        // path added "/quest-store/mentor/form/new/item";                  GET
+        // path added "/quest-store/mentor/form/current/quest";              GET
+        // path added "/quest-store/mentor/form/current/item";              GET
+        // path added "/quest-store/mentor";                                GET
+        // path added "/quest-store/mentor/store/quest";                     GET
+        // path added "/quest-store/mentor/store/item";                     GET
+        // path added "/quest-store/mentor/store/not-marked/items";         GET
+        // path added "/quest-store/mentor/store/not-marked/quests";        GET
+        // path added "/quest-store/mentor/store/students-wallets";               GET
+        // path added "/quest-store/mentor/new/student";                    POST
+        // path added "/quest-store/mentor/new/student-classroom";          POST
+        // path added "/quest-store/mentor/new/quest";                      POST
+        // path added "/quest-store/mentor/new/item";                       POST
+        // path added "/quest-store/mentor/updated/quest";                   POST
+        // path added "/quest-store/mentor/updated/item";                   POST
+        // path added "/quest-store/mentor/not-marked/quest";               POST
+        // path added "/quest-store/mentor/not-marked/item";                POST
 
-        //"/quest-store/mentor/new/student-classroom";          POST
-        //"/quest-store/mentor/form/new/student-classroom";     GET
-        //"/quest-store/mentor/form/new/students-new-classroom" GET
-
-        //"/quest-store/mentor/new/quest";                      POST
-        //"/quest-store/mentor/form/new/quest";                 GET
-        //"/quest-store/mentor/new/item";                       POST
-        //"/quest-store/mentor/form/new/item";                  GET
-
-        //"/quest-store/mentor/store/quest";                     GET
-        //"/quest-store/mentor/form/current/quest";              GET
-        //"/quest-store/mentor/updated/item";                   POST
-
-        //"/quest-store/mentor/store/item";                     GET
-        //"/quest-store/mentor/form/current/item";              GET
-        //"/quest-store/mentor/updated/item";                   POST
         //"/quest-store/mentor/split/quest";                    ??
-        //todo "/quest-store/mentor/not-marked/store/items";         GET
-        //todo "/quest-store/mentor/not-marked/store/quests";        GET
-        //"/quest-store/mentor/not-marked/quest";               POST
-        //"/quest-store/mentor/not-marked/item";                POST
-        //todo "/quest-store/mentor/students/wallets";               GET
 
         Optional<User> loggedUserOptional = validateSession(exchange);
         if (loggedUserOptional.isEmpty()) return;
@@ -64,94 +58,144 @@ public class MentorController implements HttpHandler {
 
         String method = exchange.getRequestMethod(); // "POST" or "GET"
 
-        List<String> uriList = Arrays.stream(exchange.getRequestURI().getPath().split("/"))
-                .collect(Collectors.toList());
+        List<String> uriList = Arrays.asList(exchange.getRequestURI().getPath().split("/"));
 
         if (method.equals("GET")) {
-            if (displayMentorMainPage(exchange, loggedUser, uriList)) return;
-            if (displayForms(exchange, uriList)) return;
-            if (displayStores(exchange, uriList)) return;
-            if (uriList.get(3).equals("not-marked")) {
-                switch (uriList.get(5)) {
-                    case "items":
-                        return;
-                }
+            if (uriList.get(2).equals("mentor") && uriList.size() == 3) {
+                getStartScreen(exchange, loggedUser);
+                return;
             }
+            switch (uriList.get(3)) {
+                case "form":
+                    displayForms(exchange, uriList);
+                    return;
+                case "store":
+                    displayStores(exchange, uriList);
+                    return;
+            }
+        }
 
+        if (method.equals("POST")) {
+            switch (uriList.get(3)) {
+                case "new":
+                    receiveNewForm(exchange, uriList);
+                    return;
+                case "updated":
+                    receiveUpdatedForm(exchange, uriList);
+                    return;
+                case "not-marked":
+                    markReceivedObject(exchange, uriList);
+                    return;
+            }
+            redirection(exchange, "/quest-store/mentor");
         }
 
         sendNotFoundResponse(exchange);
     }
 
-    private boolean displayStores(HttpExchange exchange, List<String> uriList) {
-        if (uriList.get(3).equals("store")) {
-            switch (uriList.get(4)) {
-                case "item":
-                    mentorView.displayAllItemsWhichAreAbleToEdit(exchange, shopService.getAllItems());
-                    return true;
-                case "quest":
-                    mentorView.displayAllQuestsWhichAreAbleToEdit(exchange, shopService.getAllQuests());
-                    return true;
-            }
+    private void markReceivedObject(HttpExchange exchange, List<String> uriList) {
+        switch (uriList.get(4)) {
+            case "item":
+                markUsedArtifact(exchange);
+                return;
+            case "quest":
+                markAchievedQuest(exchange);
         }
-        return false;
     }
 
-    private boolean displayForms(HttpExchange exchange, List<String> uriList) throws IOException {
-        if (uriList.get(3).equals("form")) {
-            if (displayAllNewForms(exchange, uriList)) return true;
-            return displayFormForCurrentObjectToEdit(uriList);
+    private void receiveUpdatedForm(HttpExchange exchange, List<String> uriList) {
+        switch (uriList.get(4)) {
+            case "quest":
+                updateQuest(exchange);
+                return;
+            case "item":
+                updateItem(exchange);
         }
-        return false;
     }
 
-    private boolean displayFormForCurrentObjectToEdit(List<String> uriList) {
-        if (uriList.get(4).equals("current")) {
-            switch (uriList.get(5)) {
-                case "item":
-                    int itemId = 0; // TODO get item id from exchange
-                    mentorView.loadCurrentItemToEdit(shopService.getItem(itemId));
-                    return true;
-                case "quest":
-                    int questId=0; //TODO get quest id from exchange
-                    mentorView.loadCurrentQuestToEdit(shopService.getQuest(questId));
-                    return true;
-            }
+    private void receiveNewForm(HttpExchange exchange, List<String> uriList) {
+        switch (uriList.get(4)) {
+            case "student":
+                addStudent(exchange);
+                return;
+            case "student-classroom":
+                addStudentToClassroom(exchange);
+                return;
+            case "quest":
+                addNewQuest(exchange);
+                return;
+            case "item":
+                addNewItem(exchange);
         }
-        return false;
     }
 
-    private boolean displayAllNewForms(HttpExchange exchange, List<String> uriList) throws IOException {
-        if (uriList.get(4).equals("new")) {
-            switch (uriList.get(5)) {
-                case "student":
-                    staticView.receiveFormToProvideNewStudent(exchange);
-                    return true;
-                case "student-classroom":
-                    // TODO get user from exchange
-                    int studentId = 0;
-                    mentorView.loadTemplateWithAssignStudentToClassroom(exchange,
-                            userService.getStudent(studentId), userService.getAllClassrooms());
-                    return true;
-                case "student-new-classroom":
-                    mentorView.loadTemplateWithAllStudents(exchange, userService.getAllStudents());
-                case "item":
-                    staticView.receiveFormToProvideNewItem(exchange);
-                    return true;
-                case "quest":
-                    staticView.receiveFormToProvideNewQuest(exchange);
-                    return true;
-            }
+    private void displayStores(HttpExchange exchange, List<String> uriList) {
+        switch (uriList.get(4)) {
+            case "item":
+                mentorView.displayAllItemsWhichAreAbleToEdit(exchange, shopService.getAllItems());
+                return;
+            case "quest":
+                mentorView.displayAllQuestsWhichAreAbleToEdit(exchange, shopService.getAllQuests());
+                return;
+            case "not-marked":
+                displayNotMarkedStores(exchange, uriList);
+                return;
+            case "students-wallets":
+                displayStudentsWallets();
         }
-        return false;
     }
 
-    private boolean displayMentorMainPage(HttpExchange exchange, User loggedUser, List<String> uriList) throws IOException {
-        if (uriList.get(2).equals("mentor") && uriList.size() == 3) {
-            getStartScreen(exchange, loggedUser);
-            return true;
+    private void displayNotMarkedStores(HttpExchange exchange, List<String> uriList) {
+        switch (uriList.get(5)) {
+            case "item":
+                mentorView.displayAllNotMarkedItems(exchange, tradingService.getAllNotMarkedItems());
+                return;
+            case "quest":
+                mentorView.displayAllNotMarkedQuests(exchange, tradingService.getAllNotMarkedQuests());
         }
-        return false;
+    }
+
+    private void displayForms(HttpExchange exchange, List<String> uriList) throws IOException {
+        switch (uriList.get(4)) {
+            case "current":
+                displayFormForCurrentObjectToEdit(exchange, uriList);
+                return;
+            case "new":
+                displayAllNewForms(exchange, uriList);
+        }
+    }
+
+    private void displayFormForCurrentObjectToEdit(HttpExchange exchange, List<String> uriList) {
+        switch (uriList.get(5)) {
+            case "item":
+                int itemId = 0; // TODO get item id from exchange
+                mentorView.loadCurrentItemToEdit(exchange, shopService.getItem(itemId));
+                return;
+            case "quest":
+                int questId=0; //TODO get quest id from exchange
+                mentorView.loadCurrentQuestToEdit(exchange, shopService.getQuest(questId));
+        }
+    }
+
+    private void displayAllNewForms(HttpExchange exchange, List<String> uriList) throws IOException {
+        switch (uriList.get(5)) {
+            case "student":
+                staticView.receiveFormToProvideNewStudent(exchange);
+                return;
+            case "student-classroom":
+                // TODO get user from exchange
+                int studentId = 0;
+                mentorView.loadTemplateWithAssignStudentToClassroom(exchange,
+                        userService.getStudent(studentId), userService.getAllClassrooms());
+                return;
+            case "student-new-classroom":
+                mentorView.loadTemplateWithAllStudents(exchange, userService.getAllStudents());
+            case "item":
+                staticView.receiveFormToProvideNewItem(exchange);
+                return;
+            case "quest":
+                staticView.receiveFormToProvideNewQuest(exchange);
+        }
     }
 
     private Optional<User> validateSession(HttpExchange exchange) throws IOException {
@@ -176,30 +220,45 @@ public class MentorController implements HttpHandler {
         mentorView.loadMainPageTemplateWithMentor(exchange, user);
     }
 
-    private void addStudent(String json) {
+    private void addStudent(HttpExchange exchange) {
+        // todo implement
     }
 
-    private void addQuest(String json) {
+    private void addStudentToClassroom(HttpExchange exchange) {
+        // todo implement
+    }
+
+    private void addNewQuest(HttpExchange exchange) {
+        // todo implement
     }
 
     private void splitQuests() {
 
     }
 
-    private void addStoreItem(String json) {
+    private void addNewItem(HttpExchange exchange) {
+        // todo implement
     }
 
-    private void editStoreItem(String json) {
+    private void updateItem(HttpExchange exchange) {
+        // todo implement
     }
 
-    private void markAchievedQuests(String json) {
+    private void updateQuest(HttpExchange exchange) {
+        // todo implement
     }
 
-    private void markBoughtArtifacts(String json) {
+    private void markAchievedQuest(HttpExchange json) {
+        // todo implement
     }
 
-    private File seeStudentsWallets() {
-        return null;
+    private void markUsedArtifact(HttpExchange json) {
+        // todo implement
+    }
+
+    private void displayStudentsWallets() {
+        //todo implement method
+        return;
     }
 
     private void redirection(HttpExchange httpExchange, String path) throws IOException {
