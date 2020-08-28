@@ -7,29 +7,35 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CookieHelper {
+public final class CookieHelper {
     private static final String SESSION_COOKIE_NAME = "sessionId";
 
-    public void createNewCookie(HttpExchange httpExchange, String sessionId) {
+    public static void createNewCookie(HttpExchange httpExchange, String sessionId) {
+        HttpCookie cookie = new HttpCookie(SESSION_COOKIE_NAME, sessionId);
+        httpExchange.getResponseHeaders().add("Set-Cookie", cookie.toString());
+    }
+
+    public static void deleteCookie(HttpExchange httpExchange) {
+        String cookie = httpExchange.getRequestHeaders().getFirst("Cookie") + ";Max-age=0";
+        httpExchange.getResponseHeaders().set("Set-Cookie", cookie);
+    }
+
+    public static Optional<String> getSessionIdFromCookie(HttpExchange httpExchange) {
         Optional<HttpCookie> cookie = getSessionIdCookie(httpExchange);
-
-        cookie = Optional.of(new HttpCookie(SESSION_COOKIE_NAME, sessionId));
-        httpExchange.getResponseHeaders().add("Set-Cookie", cookie.get().toString());
+        String sessionId = null;
+        if (cookie.isPresent()) {
+            sessionId = cookie.get().getValue().replace("\"", "");
+        }
+        return Optional.ofNullable(sessionId);
     }
 
-    public void deleteCookie(HttpExchange httpExchange, String sessionId) {
-        Optional<HttpCookie> cookie;
-        cookie = Optional.of(new HttpCookie(SESSION_COOKIE_NAME, sessionId));
-        httpExchange.getResponseHeaders().remove("Set-Cookie", cookie.get().toString());
-    }
-
-    public Optional<HttpCookie> getSessionIdCookie(HttpExchange httpExchange) {
+    public static Optional<HttpCookie> getSessionIdCookie(HttpExchange httpExchange) {
         String cookieStr = httpExchange.getRequestHeaders().getFirst("Cookie");
         List<HttpCookie> cookies = parseCookies(cookieStr);
-        return findCookieByName(SESSION_COOKIE_NAME, cookies);
+        return findCookieByName(cookies);
     }
 
-    private List<HttpCookie> parseCookies(String cookieString) {
+    private static List<HttpCookie> parseCookies(String cookieString) {
         List<HttpCookie> cookies = new ArrayList<>();
         if (cookieString == null || cookieString.isEmpty()) {
             return cookies;
@@ -43,9 +49,9 @@ public class CookieHelper {
         return cookies;
     }
 
-    private Optional<HttpCookie> findCookieByName(String name, List<HttpCookie> cookies) {
+    private static Optional<HttpCookie> findCookieByName(List<HttpCookie> cookies) {
         for (HttpCookie cookie : cookies) {
-            if (cookie.getName().equals(name))
+            if (cookie.getName().equals(SESSION_COOKIE_NAME))
                 return Optional.of(cookie);
         }
         return Optional.empty();
