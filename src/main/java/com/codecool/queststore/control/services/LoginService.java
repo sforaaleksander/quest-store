@@ -14,8 +14,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class LoginService {
     private final int sessionDurationMinutes = 10;
-    private Dao<Session> sessionDao = new SessionDao();
-    private Dao<User> userDao = new UserDao();
+    private final Dao<Session> sessionDao = new SessionDao();
+    private final Dao<User> userDao = new UserDao();
 
     public Optional<String> login(String email, String password) {
         if (!isUserAndPasswordValid(email, password)) {
@@ -25,10 +25,9 @@ public class LoginService {
         String sessionId = getRandomString();
         var logInDate = Timestamp.valueOf(LocalDateTime.now());
         var expirationDate = Timestamp.valueOf(LocalDateTime.now().plusMinutes(sessionDurationMinutes));
-        boolean active = true;
         int userId = userDao.get(String.format("email = '%s'", email)).get(0).getId();
 
-        sessionDao.insert(new Session(sessionId, userId, logInDate, expirationDate, active));
+        sessionDao.insert(new Session(sessionId, userId, logInDate, expirationDate, true));
 
         return Optional.of(sessionId);
     }
@@ -38,7 +37,6 @@ public class LoginService {
         if (users.isEmpty()) {
             return false;
         }
-
         return password.equals(users.get(0).getPassword());
     }
 
