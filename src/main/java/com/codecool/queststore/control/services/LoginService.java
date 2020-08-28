@@ -41,19 +41,18 @@ public class LoginService {
     }
 
     private String getRandomString() {
-        final int length = 20;
-        StringBuilder sb = new StringBuilder(20);
+        final int stringLength = 25;
+        StringBuilder sb = new StringBuilder(stringLength);
 
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < stringLength; i++) {
             sb.append(getRandomChar());
         }
         return sb.toString();
     }
 
     private char getRandomChar() {
-        final int start = 48;
-        final int end = 91;
-        return (char) ThreadLocalRandom.current().nextInt(start, end + 1);
+        final String ALLOWED_CHARS = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890,.?!";
+        return ALLOWED_CHARS.charAt(ThreadLocalRandom.current().nextInt(ALLOWED_CHARS.length()));
     }
 
     public void logout(User user) {
