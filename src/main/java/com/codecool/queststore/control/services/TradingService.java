@@ -2,6 +2,7 @@ package com.codecool.queststore.control.services;
 
 import com.codecool.queststore.control.services.models.Transaction;
 import com.codecool.queststore.control.services.models.TransactionObjectType;
+import com.codecool.queststore.control.services.models.UserRoleType;
 import com.codecool.queststore.control.services.models.Wallet;
 import com.codecool.queststore.dao.Dao;
 import com.codecool.queststore.dao.balance.Balance;
@@ -12,6 +13,8 @@ import com.codecool.queststore.dao.items.Item;
 import com.codecool.queststore.dao.items.ItemDao;
 import com.codecool.queststore.dao.quests.Quest;
 import com.codecool.queststore.dao.quests.QuestDao;
+import com.codecool.queststore.dao.user.User;
+import com.codecool.queststore.dao.user.UserDao;
 import com.codecool.queststore.dao.userItems.UserItems;
 import com.codecool.queststore.dao.userItems.UserItemsDao;
 import com.codecool.queststore.dao.userQuests.UserQuests;
@@ -28,10 +31,11 @@ public class TradingService {
 
     private final UserItemsDao userItemDao = new UserItemsDao();
     private final ItemDao itemDao = new ItemDao();
-    private Dao<UserQuests> userQuestDao = new UserQuestsDao();
-    private Dao<Balance> balanceDao = new BalanceDao();
-    private Dao<Quest> questDao = new QuestDao();
-    private Dao<Category> categoryDao = new CategoryDao();
+    private final UserDao userDao = new UserDao();
+    private final Dao<UserQuests> userQuestDao = new UserQuestsDao();
+    private final Dao<Balance> balanceDao = new BalanceDao();
+    private final Dao<Quest> questDao = new QuestDao();
+    private final Dao<Category> categoryDao = new CategoryDao();
 
     public int getStudentCoinsAmount(int userId) {
         return balanceDao.get(String.format("user_id=?", userId)).get(0).getAmount();
@@ -128,4 +132,53 @@ public class TradingService {
 
     public List<Transaction> getAllItemsTransactions() { return null; }
 
+    public List<Transaction> getAllNotMarkedItems() {
+        List<UserItems> userItems = userItemDao.get("is_used=false");
+        List<Item> items = itemDao.get("1=1");
+        List<User> users = userDao.get(String.format("id_role=%d", UserRoleType.STUDENT.getId()));
+        List<Category> categories = categoryDao.get("1=1");
+        List<Transaction> transactions = new ArrayList<>();
+        for (User user : users) {
+            List<UserItems> givenUserItems =
+                    userItems.stream().filter(ui -> ui.getUserId() == user.getId()).collect(Collectors.toList());
+            givenUserItems.stream().map(gui -> {
+                Item item = items.stream().filter(i -> i.getId() == gui.getItemId()).findFirst().get();
+                Category category = categories.stream().filter(c -> c.getId() == item.getId()).findFirst().get();
+                return new Transaction().setName(item.getName())
+                        .setDescription(item.getDescription())
+                        .setCost(item.getCost())
+                        .setCategoryName(category.getName())
+                        .setTransactionDate(gui.getBoughtDate())
+                        .setDone(gui.isUsed())
+                        .setTransactionObjectType(TransactionObjectType.ITEM)
+                        .setOwner(user);
+            }).forEach(transactions::add);
+        }
+        return transactions;
+    }
+
+    public List<Transaction> getAllNotMarkedQuests() {
+        List<UserQuests> userQuests = userQuestDao.get("accepted=false");
+        List<Quest> quests = questDao.get("1=1");
+        List<User> users = userDao.get(String.format("id_role=%d", UserRoleType.STUDENT.getId()));
+        List<Category> categories = categoryDao.get("1=1");
+        List<Transaction> transactions = new ArrayList<>();
+        for (User user : users) {
+            List<UserQuests> givenUserQuests =
+                    userQuests.stream().filter(uq -> uq.getUserId() == user.getId()).collect(Collectors.toList());
+            givenUserQuests.stream().map(guq -> {
+                Quest quest = quests.stream().filter(q -> q.getId() == guq.getQuestId()).findFirst().get();
+                Category category = categories.stream().filter(c -> c.getId() == quest.getId()).findFirst().get();
+                return new Transaction().setName(quest.getName())
+                        .setDescription(quest.getDescription())
+                        .setCost(quest.getCost())
+                        .setCategoryName(category.getName())
+                        .setTransactionDate(guq.getDoneDate())
+                        .setDone(guq.isAccepted())
+                        .setTransactionObjectType(TransactionObjectType.QUEST)
+                        .setOwner(user);
+            }).forEach(transactions::add);
+        }
+        return transactions;
+    }
 }
