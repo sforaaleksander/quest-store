@@ -8,7 +8,9 @@ import com.codecool.queststore.dao.user.UserDao;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.AbstractMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -17,19 +19,18 @@ public class LoginService {
     private final Dao<Session> sessionDao = new SessionDao();
     private final Dao<User> userDao = new UserDao();
 
-    public Optional<String> login(String email, String password) {
+    public Optional<Map.Entry<String, User>> login(String email, String password) {
         if (!isUserAndPasswordValid(email, password)) {
             return Optional.empty();
         }
-
         String sessionId = getRandomString();
         var logInDate = Timestamp.valueOf(LocalDateTime.now());
         var expirationDate = Timestamp.valueOf(LocalDateTime.now().plusMinutes(sessionDurationMinutes));
-        int userId = userDao.get(String.format("email = '%s'", email)).get(0).getId();
+        User user = userDao.get(String.format("email = '%s'", email)).get(0);
 
-        sessionDao.insert(new Session(sessionId, userId, logInDate, expirationDate, true));
+        sessionDao.insert(new Session(sessionId, user.getId(), logInDate, expirationDate, true));
 
-        return Optional.of(sessionId);
+        return Optional.of(new AbstractMap.SimpleEntry<>(sessionId, user));
     }
 
     private boolean isUserAndPasswordValid(String email, String password) {
@@ -53,16 +54,6 @@ public class LoginService {
     private char getRandomChar() {
         final String ALLOWED_CHARS = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890,.?!";
         return ALLOWED_CHARS.charAt(ThreadLocalRandom.current().nextInt(ALLOWED_CHARS.length()));
-    }
-
-    public void logout(User user) {
-        List<Session> sessions = getActiveSessionsByUser(user);
-        if (sessions.isEmpty()) {
-            throw new NullPointerException("Cannot logout user.");
-        }
-        var thisSession = sessions.get(0);
-        thisSession.setActive(false);
-        sessionDao.update(thisSession);
     }
 
     private List<Session> getActiveSessionsByUser(User user) {

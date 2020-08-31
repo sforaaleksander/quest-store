@@ -1,6 +1,5 @@
 package com.codecool.queststore.controllers;
 
-import com.codecool.queststore.control.services.LoginService;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -15,19 +14,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public abstract class Controller implements HttpHandler {
-    private final LoginService loginService = new LoginService();
-    private String context;
-    private String requestUri;
+abstract class Controller implements HttpHandler {
+    protected String context;
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        String method = httpExchange.getRequestMethod();
-        requestUri = httpExchange.getRequestURI().getPath();
+        final String requestUri = httpExchange.getRequestURI().getPath();
         List<String> uriList = Arrays.stream(requestUri.split("/"))
                 .collect(Collectors.toList());
-        context = uriList.get(uriList.size() - 1);
+        context = uriList.size() > 0 ? uriList.get(uriList.size() - 1) : "";
 
+        String method = httpExchange.getRequestMethod();
         if (method.equals("GET")) {
             handleGet(httpExchange);
 

@@ -83,15 +83,11 @@ public class SessionDao extends PostgreSqlJDBC implements Dao<Session> {
     @Override
     public boolean delete(Session session) {
         try {
-            String deleteTemplate = "DELETE FROM sessions " +
-                    "WHERE session_id=? AND user_id=? AND login_timestamp=? " +
-                    "AND logout_timestamp=? AND is_active=?;";
+            String deleteTemplate = "UPDATE sessions " +
+                    "SET is_active='false' " +
+                    "WHERE session_id=?;";
             PreparedStatement preparedStatement = getConnection().prepareStatement(deleteTemplate);
             preparedStatement.setString(1, session.getSessionId());
-            preparedStatement.setInt(2, session.getUserId());
-            preparedStatement.setTimestamp(3, session.getLoginTimestamp());
-            preparedStatement.setTimestamp(4, session.getLogoutTimestamp());
-            preparedStatement.setBoolean(5, session.isActive());
             preparedStatement.execute();
             preparedStatement.close();
             closeConnection();
