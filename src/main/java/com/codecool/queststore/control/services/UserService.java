@@ -20,8 +20,8 @@ public class UserService {
     private Dao<Role> roleDao = new RoleDao();
     private Dao<Classroom> classroomDao = new ClassroomDao();
     private Dao<UserClassroom> userClassroomDao = new UserClassroomDao();
-    private final int MENTOR_ROLE_ID = roleDao.get("name='mentor' LIMIT 1").get(0).getId();
-    private final int STUDENT_ROLE_ID = roleDao.get("name='student' LIMIT 1").get(0).getId();
+    private final int MENTOR_ROLE_ID = roleDao.get("name='Mentor' LIMIT 1").get(0).getId();
+    private final int STUDENT_ROLE_ID = roleDao.get("name='Student' LIMIT 1").get(0).getId();
 
     public boolean addStudent(User student) {
         boolean isAdded = addUser(student, STUDENT_ROLE_ID);
