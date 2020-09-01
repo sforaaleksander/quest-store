@@ -13,7 +13,7 @@ import java.sql.Statement;
 public class DatabaseResetter {
 
     private static final String URL = "jdbc:h2:~/test_db";
-    private static final String USER = "tes";
+    private static final String USER = "test";
     private static final String PASSWORD = "";
 
     public static Connection getConnection() throws SQLException {
