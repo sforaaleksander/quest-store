@@ -13,10 +13,11 @@ class LoginServiceTest {
      */
     public static void main(String[] args) {
         try {
-            Class.forName("org.h2.Driver");
+//            Class.forName("org.h2.Driver");
             Connection con = DriverManager.getConnection("jdbc:h2:~/test", "test", "");
             Statement stmt = con.createStatement();
-            //stmt.executeUpdate( "DROP TABLE table1" );
+            stmt.executeUpdate( "DROP TABLE table1" );
+            stmt.executeUpdate( "DROP TABLE table2" );
             stmt.executeUpdate("CREATE TABLE table1 ( user varchar(50) )");
             stmt.executeUpdate("INSERT INTO table1 ( user ) VALUES ( 'Claudio' )");
             stmt.executeUpdate("INSERT INTO table1 ( user ) VALUES ( 'Bernasconi' )");
