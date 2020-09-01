@@ -203,7 +203,7 @@ INSERT INTO public.students_shopping (user_id, shopping_id, confirmed_date, conf
 INSERT INTO public.sessions (session_id, user_id, login_timestamp, logout_timestamp, is_active) VALUES ('V3WE?rN7RWcU3YsGCxdCdTfNt', 1, '2020-08-31 08:45:46.544', '2020-08-31 08:55:50.023508', false);
 INSERT INTO public.sessions (session_id, user_id, login_timestamp, logout_timestamp, is_active) VALUES ('o.hk7wCJn3ndenLq0,zVcENTc', 1, '2020-08-31 09:34:36.603', '2020-08-31 09:44:40.853266', false);
 INSERT INTO public.sessions (session_id, user_id, login_timestamp, logout_timestamp, is_active) VALUES ('JdV1HvClM3Ag,O!d31NU6gaQc', 33, '2020-08-31 09:35:32.928', '2020-08-31 09:40:32.928', false);
-
+INSERT INTO public.sessions (session_id, user_id, login_timestamp, logout_timestamp, is_active) VALUES ('1234567890qwerty', 1, '2020-08-31 08:45:46.544', '2020-08-31 08:55:50.023', true);
 
 INSERT INTO public.roles (id, name) VALUES (1, 'Student');
 INSERT INTO public.roles (id, name) VALUES (2, 'Mentor');
