@@ -12,7 +12,7 @@ import java.sql.Statement;
 
 public class DatabaseResetter {
 
-    private static final String URL = "jdbc:h2:~/test";
+    private static final String URL = "jdbc:h2:~/test_db";
     private static final String USER = "tes";
     private static final String PASSWORD = "";
 
@@ -23,8 +23,8 @@ public class DatabaseResetter {
     public static void resetDatabase() throws SQLException {
         String string;
         StringBuilder stringBuilder = new StringBuilder();
-        Connection connection = DatabaseResetter.getConnection();
         clearDB();
+        Connection connection = DatabaseResetter.getConnection();
         try {
             FileReader fileReader = new FileReader(new File("src/main/resources/sql/database_export.sql"));
             BufferedReader bufferedReader = new BufferedReader(fileReader);
