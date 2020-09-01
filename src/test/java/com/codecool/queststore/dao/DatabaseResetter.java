@@ -1,15 +1,15 @@
+package com.codecool.queststore.dao;
+
 import org.h2.tools.RunScript;
-import org.junit.jupiter.api.BeforeAll;
 
 import java.io.FileReader;
-
 import java.io.IOException;
-import java.sql.SQLException;
-import java.sql.DriverManager;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.Statement;
 
-public class DatabaseResetter {
+class DatabaseResetter {
 
     private static final String URL = "jdbc:h2:~/test_db";
     private static final String USER = "test";
@@ -19,12 +19,11 @@ public class DatabaseResetter {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
-    @BeforeAll
     public static void resetDatabase() throws SQLException {
         clearDB();
         Connection connection = DatabaseResetter.getConnection();
         try {
-            RunScript.execute(connection, new FileReader("src/main/resources/sql/database_export.sql"));
+            RunScript.execute(connection, new FileReader("src/main/resources/sql/jdbc_test_db.sql"));
             connection.close();
         } catch (IOException e) {
             connection.close();
@@ -38,13 +37,5 @@ public class DatabaseResetter {
         String query = " DROP ALL OBJECTS;";
         statement.executeUpdate(query);
         connection.close();
-    }
-
-    public static void main() {
-        try {
-            DatabaseResetter.resetDatabase();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 }
