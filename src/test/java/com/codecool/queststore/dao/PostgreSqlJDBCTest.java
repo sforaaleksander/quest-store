@@ -1,15 +1,19 @@
+package com.codecool.queststore.dao;
+
 import org.h2.tools.RunScript;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.FileReader;
-
 import java.io.IOException;
-import java.sql.SQLException;
-import java.sql.DriverManager;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.Statement;
 
-public class DatabaseResetter {
+import static org.junit.jupiter.api.Assertions.*;
+
+class PostgreSqlJDBCTest {
 
     private static final String URL = "jdbc:h2:~/test_db";
     private static final String USER = "test";
@@ -22,9 +26,9 @@ public class DatabaseResetter {
     @BeforeAll
     public static void resetDatabase() throws SQLException {
         clearDB();
-        Connection connection = DatabaseResetter.getConnection();
+        Connection connection = PostgreSqlJDBCTest.getConnection();
         try {
-            RunScript.execute(connection, new FileReader("src/main/resources/sql/database_export.sql"));
+            RunScript.execute(connection, new FileReader("src/main/resources/sql/jdbc_test_db.sql"));
             connection.close();
         } catch (IOException e) {
             connection.close();
@@ -33,16 +37,17 @@ public class DatabaseResetter {
     }
 
     public static void clearDB() throws SQLException {
-        Connection connection = DatabaseResetter.getConnection();
+        Connection connection = PostgreSqlJDBCTest.getConnection();
         Statement statement = connection.createStatement();
         String query = " DROP ALL OBJECTS;";
         statement.executeUpdate(query);
         connection.close();
     }
 
-    public static void main() {
+    @Test
+    public void main() {
         try {
-            DatabaseResetter.resetDatabase();
+            PostgreSqlJDBCTest.resetDatabase();
         } catch (SQLException e) {
             e.printStackTrace();
         }
