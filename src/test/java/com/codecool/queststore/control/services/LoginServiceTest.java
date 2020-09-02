@@ -27,10 +27,8 @@ class LoginServiceTest {
     @BeforeAll
     static void beforeAll() throws IOException, SQLException {
         databaseResetter.resetDatabase();
-        userDao = mock(UserDao.class);
-        sessionDao = mock(SessionDao.class);
-        when(userDao.getConnection()).thenReturn(databaseResetter.getConnection());
-        when(sessionDao.getConnection()).thenReturn(databaseResetter.getConnection());
+        userDao = new UserDao("jdbc:h2:~/test_db", "test", "");
+        sessionDao = new SessionDao("jdbc:h2:~/test_db", "test", "");
         loginService = new LoginService(sessionDao, userDao);
     }
 //    @BeforeAll
