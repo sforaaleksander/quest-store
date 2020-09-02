@@ -10,6 +10,12 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -56,8 +62,19 @@ class LoginServiceTest {
 //    }
 
     @Test
-    void should_ReturnOptionalOfUser_when_SessionIDExistsInDB() {
+    void should_ReturnOptionalOfUser_when_SessionIDExistsInDB() throws ParseException {
         User user = new User().setId(1).setName("Mateusz").setSurname("Gołda").setPassword("asd").setEmail("mateusz@gmail.com").setIdRole(1).setActive(true);
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+            Date parsedDate1 = dateFormat.parse("2020-08-31 08:45:46.544");
+            Date parsedDate2 = dateFormat.parse("2020-08-31 08:55:50.023");
+
+            Timestamp timestamp1 = new java.sql.Timestamp(parsedDate1.getTime());
+            Timestamp timestamp2 = new java.sql.Timestamp(parsedDate2.getTime());
+
+        Session session = new Session("1234567890qwerty", 1, timestamp1, timestamp2, true);
+        when(sessionDao.get(String.format("session_id = '%s' AND is_active=true", "1234567890qwerty"))).thenReturn(Collections.singletonList(session));
+        when(userDao.get(String.format("id = %d", session.getUserId()))).thenReturn(Collections.singletonList(user));
         assertEquals(Optional.of(user), loginService.getLoggedUserBySessionId("1234567890qwerty"));
     }
 }
