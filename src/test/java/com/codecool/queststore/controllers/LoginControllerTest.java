@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.ByteArrayInputStream;
@@ -56,8 +57,8 @@ class LoginControllerTest {
     @BeforeEach
     void setUp() {
         user = new User();
-        headers = new Headers();
-        loginController = new LoginController(loginService, loginView);
+//        headers = new Headers();
+//        loginController = new LoginController(loginService, loginView);
     }
 
     private String getSessionIdFromCookie(HttpCookie cookie) {
@@ -66,25 +67,21 @@ class LoginControllerTest {
 
     @Test
     void should_RedirectToLoginPage_when_NoEndpointProvided() throws IOException {
-        //setGeneralMocks();
-//        when(loginController.getUserFromCookie(httpExchange)).thenReturn(Optional.of(user));
         when(httpExchange.getRequestMethod()).thenReturn("GET");
-        when(httpExchange.getRequestURI()).thenReturn(URI.create(""));
-        when(httpExchange.getResponseBody()).thenReturn(outputStream);
+        when(httpExchange.getRequestURI()).thenReturn(URI.create("/"));
+//        when(httpExchange.getResponseBody()).thenReturn(outputStream);
+        doCallRealMethod().when(loginView).redirect(httpExchange, "/login");
         headers = new Headers();
-        headers.set("Location", "/login");
         when(httpExchange.getRequestHeaders()).thenReturn(headers);
         when(httpExchange.getResponseHeaders()).thenReturn(headers);
-//        when(loginView.redirect(httpExchange, "/login")).thenReturn();)
         //when(loginController.accessGetUserFromCookie(httpExchange)).thenReturn(null);
 
         loginController.handle(httpExchange);
-
         assertAll(
                 () -> verify(httpExchange, times(1)).getRequestMethod(),
-                () -> verify(httpExchange, times(1)).sendResponseHeaders(302, 0),
-                () -> verify(outputStream, times(1)).write(any()),
-                () -> verify(outputStream, times(1)).close()
+                () -> verify(httpExchange, times(1)).sendResponseHeaders(302, 0)
+//                () -> verify(outputStream, times(1)).write(any()),
+//                () -> verify(outputStream, times(1)).close()
         );
     }
 
