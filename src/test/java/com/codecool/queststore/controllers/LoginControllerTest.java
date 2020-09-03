@@ -67,12 +67,15 @@ class LoginControllerTest {
     @Test
     void should_RedirectToLoginPage_when_NoEndpointProvided() throws IOException {
         //setGeneralMocks();
+//        when(loginController.getUserFromCookie(httpExchange)).thenReturn(Optional.of(user));
         when(httpExchange.getRequestMethod()).thenReturn("GET");
-
-        when(loginController.getUserFromCookie(httpExchange)).thenReturn(Optional.of(user));
-        when(httpExchange.getRequestURI()).thenReturn(URI.create("/"));
+        when(httpExchange.getRequestURI()).thenReturn(URI.create(""));
         when(httpExchange.getResponseBody()).thenReturn(outputStream);
+        headers = new Headers();
+        headers.set("Location", "/login");
         when(httpExchange.getRequestHeaders()).thenReturn(headers);
+        when(httpExchange.getResponseHeaders()).thenReturn(headers);
+//        when(loginView.redirect(httpExchange, "/login")).thenReturn();)
         //when(loginController.accessGetUserFromCookie(httpExchange)).thenReturn(null);
 
         loginController.handle(httpExchange);
