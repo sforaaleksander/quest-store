@@ -47,6 +47,10 @@ public class LoginController extends Controller implements HttpHandler {
         return UserRoleType.getById(id).toString().toLowerCase();
     }
 
+    public String accessGetUsersRole(User user){
+        return getUsersRole(user);
+    }
+
     private Optional<User> getUserFromCookie(HttpExchange httpExchange) {
         User user = null;
         Optional<HttpCookie> cookie = CookieHelper.getSessionIdCookie(httpExchange);
