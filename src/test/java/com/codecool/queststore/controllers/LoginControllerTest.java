@@ -2,6 +2,7 @@ package com.codecool.queststore.controllers;
 
 import com.codecool.queststore.control.services.LoginService;
 import com.codecool.queststore.dao.user.User;
+import com.codecool.queststore.dao.user.UserDao;
 import com.codecool.queststore.helpers.CookieHelper;
 import com.codecool.queststore.view.LoginView;
 import com.sun.net.httpserver.Headers;
@@ -19,6 +20,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpCookie;
 import java.net.URI;
+import java.util.AbstractMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,8 +60,8 @@ class LoginControllerTest {
     @BeforeEach
     void setUp() {
         user = new User();
-//        headers = new Headers();
-//        loginController = new LoginController(loginService, loginView);
+        headers = new Headers();
+        loginController = new LoginController(loginService, loginView);
     }
 
     private String getSessionIdFromCookie(HttpCookie cookie) {
@@ -69,9 +72,7 @@ class LoginControllerTest {
     void should_RedirectToLoginPage_when_NoEndpointProvided() throws IOException {
         when(httpExchange.getRequestMethod()).thenReturn("GET");
         when(httpExchange.getRequestURI()).thenReturn(URI.create("/"));
-//        when(httpExchange.getResponseBody()).thenReturn(outputStream);
         doCallRealMethod().when(loginView).redirect(httpExchange, "/login");
-        headers = new Headers();
         when(httpExchange.getRequestHeaders()).thenReturn(headers);
         when(httpExchange.getResponseHeaders()).thenReturn(headers);
         //when(loginController.accessGetUserFromCookie(httpExchange)).thenReturn(null);
@@ -83,8 +84,27 @@ class LoginControllerTest {
 //                () -> verify(outputStream, times(1)).write(any()),
 //                () -> verify(outputStream, times(1)).close()
         );
+
     }
 
+    @Test
+    void testPostMethodDontKnowHowToNameIt() throws IOException {
+        when(httpExchange.getRequestMethod()).thenReturn("POST");
+        User testUser = new User().setIdRole(1).setEmail("mateusz@gmail.com").setPassword("asd");
+        when(loginService.login(testUser.getEmail(),testUser.getPassword())).thenReturn(Optional.of(new AbstractMap.SimpleEntry<>("someSessionId", testUser)));
+        when(httpExchange.getRequestBody()).thenReturn(new ByteArrayInputStream(String.format("email=%s&password=%s",testUser.getEmail(),testUser.getPassword()).getBytes()));
+        when(httpExchange.getResponseHeaders()).thenReturn(headers);
+        when(httpExchange.getRequestURI()).thenReturn(URI.create(""));
+        doCallRealMethod().when(loginView).redirect(httpExchange, "/" + loginController.accessGetUsersRole(testUser));
+
+        loginController.handle(httpExchange);
+        assertAll(
+                () -> assertEquals("sessionId=\"someSessionId\"", headers.get("Set-Cookie").get(0)),
+                () -> assertEquals("/student", headers.get("Location").get(0)),
+                () -> verify(httpExchange, times(1)).getRequestMethod(),
+                () -> verify(httpExchange, times(1)).sendResponseHeaders(302, 0)
+        );
+    }
 
 
 
