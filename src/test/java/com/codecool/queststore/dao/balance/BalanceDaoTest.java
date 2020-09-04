@@ -1,8 +1,6 @@
 package com.codecool.queststore.dao.balance;
 
 import com.codecool.queststore.dao.DatabaseResetter;
-import com.codecool.queststore.dao.user.User;
-import org.h2.jdbc.JdbcSQLSyntaxErrorException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
