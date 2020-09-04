@@ -36,26 +36,15 @@ class LoginControllerTest {
     @Mock
     static LoginView loginView;
 
-    //@Mock
-    static CookieHelper cookieHelper;
-
     @Mock
     static HttpExchange httpExchange;
-
-    @Mock
-    static OutputStream outputStream;
 
     @InjectMocks
     static LoginController loginController;
 
     static Headers headers;
     static User user;
-    static Optional<HttpCookie> cookie;
 
-    void setGeneralMocks() {
-        //when(cookieHelper.getSessionIdCookie(httpExchange)).thenReturn(cookie);
-        when(httpExchange.getResponseHeaders()).thenReturn(headers);
-    }
 
     @BeforeEach
     void setUp() {
@@ -64,9 +53,6 @@ class LoginControllerTest {
         loginController = new LoginController(loginService, loginView);
     }
 
-    private String getSessionIdFromCookie(HttpCookie cookie) {
-        return cookie.getValue().replace("\"", "");
-    }
 
     @Test
     void should_RedirectToLoginPage_when_NoEndpointProvided() throws IOException {
@@ -75,7 +61,6 @@ class LoginControllerTest {
         doCallRealMethod().when(loginView).redirect(httpExchange, "/login");
         when(httpExchange.getRequestHeaders()).thenReturn(headers);
         when(httpExchange.getResponseHeaders()).thenReturn(headers);
-        //when(loginController.accessGetUserFromCookie(httpExchange)).thenReturn(null);
 
         loginController.handle(httpExchange);
         assertAll(
@@ -88,7 +73,7 @@ class LoginControllerTest {
     }
 
     @Test
-    void testPostMethodDontKnowHowToNameIt() throws IOException {
+    void should_ProcessLogin_when_Login() throws IOException {
         when(httpExchange.getRequestMethod()).thenReturn("POST");
         User testUser = new User().setIdRole(1).setEmail("mateusz@gmail.com").setPassword("asd");
         when(loginService.login(testUser.getEmail(),testUser.getPassword())).thenReturn(Optional.of(new AbstractMap.SimpleEntry<>("someSessionId", testUser)));

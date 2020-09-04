@@ -2,7 +2,6 @@ package com.codecool.queststore.controllers;
 
 import com.codecool.queststore.control.services.LoginService;
 import com.codecool.queststore.control.services.UserService;
-import com.codecool.queststore.dao.session.SessionDao;
 import com.codecool.queststore.dao.user.User;
 import com.codecool.queststore.view.AdminView;
 import com.sun.net.httpserver.Headers;
@@ -43,13 +42,12 @@ class AdminControllerTest {
     static User user;
 
     @BeforeEach
+    @Ignore
     void setUp() {
         headers = new Headers();
         adminController = new AdminController(loginService, adminView, userService);
-//        loginService = new LoginService();
     }
 
-    @Test
     @Ignore
     void should_DisplayAdminPage_when_LoggedAsAdmin() throws IOException {
         when(httpExchange.getRequestMethod()).thenReturn("GET");
